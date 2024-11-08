@@ -1,8 +1,5 @@
+import Customers from "@/components/screens/Customers";
+
 export default function Page() {
-  return (
-    <div>
-      <h1>Customers</h1>
-      <p>Customers page content</p>
-    </div>
-  );
+  return <Customers />;
 }
