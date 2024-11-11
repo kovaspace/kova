@@ -1,20 +1,19 @@
 "use client";
 
-import * as React from "react";
 import {
   AudioWaveform,
   BookOpen,
   Bot,
+  CalendarDays,
   Command,
-  Frame,
   GalleryVerticalEnd,
-  Map,
   PieChart,
   Settings2,
   SquareTerminal,
+  Users,
 } from "lucide-react";
+import * as React from "react";
 
-import NavMain from "@/components/common/NavMain";
 import NavProjects from "@/components/common/NavProjects";
 import NavUser from "@/components/common/NavUser";
 import TeamSwitcher from "@/components/common/TeamSwitcher";
@@ -139,19 +138,20 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
+      name: "Dashboard",
+      url: "/dashboard",
+      isActive: true,
       icon: PieChart,
     },
     {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      name: "Bookings",
+      url: "/bookings",
+      icon: CalendarDays,
+    },
+    {
+      name: "Customers",
+      url: "/customers",
+      icon: Users,
     },
   ],
 };
@@ -165,7 +165,7 @@ export default function AppSidebar({
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        {/* <NavMain items={data.navMain} /> */}
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
