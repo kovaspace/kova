@@ -1,4 +1,4 @@
-import Bookings from "@/components/screens/Bookings";
+import Dashboard from "@/components/screens/Dashboard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <Bookings />;
+  return <Dashboard />;
 }
