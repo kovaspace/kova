@@ -25,6 +25,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { logout } from "@/helpers/authentication";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export default function NavUser({
   user,
@@ -35,7 +38,15 @@ export default function NavUser({
     avatar: string;
   };
 }) {
+  const router = useRouter();
   const { isMobile } = useSidebar();
+
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      return await logout();
+    },
+    onSuccess: () => router.push("/"),
+  });
 
   return (
     <SidebarMenu>
@@ -98,7 +109,7 @@ export default function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => mutate()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

@@ -1,5 +1,6 @@
-import Link from "next/link";
+"use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,8 +11,31 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useMutation } from "@tanstack/react-query";
+import { signInWithPassword } from "@/helpers/authentication";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function Login() {
+  const router = useRouter();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const { mutate } = useMutation({
+    mutationFn: async ({
+      email,
+      password,
+    }: {
+      email: string;
+      password: string;
+    }) => {
+      return await signInWithPassword(email, password);
+    },
+    onSuccess: () => {
+      router.push("/dashboard");
+    },
+  });
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -29,6 +53,7 @@ export function Login() {
               type="email"
               placeholder="m@example.com"
               required
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
@@ -38,9 +63,18 @@ export function Login() {
                 Forgot your password?
               </Link>
             </div>
-            <Input id="password" type="password" required />
+            <Input
+              id="password"
+              type="password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
-          <Button type="submit" className="w-full">
+          <Button
+            type="button"
+            className="w-full"
+            onClick={() => mutate({ email, password })}
+          >
             Login
           </Button>
           <Button variant="outline" className="w-full">
