@@ -4,6 +4,7 @@ import {
   AudioWaveform,
   BookOpen,
   Bot,
+  Box,
   CalendarDays,
   Command,
   GalleryVerticalEnd,
@@ -152,6 +153,11 @@ const data = {
       name: "Customers",
       url: "/customers",
       icon: Users,
+    },
+    {
+      name: "Spaces",
+      url: "/spaces",
+      icon: Box,
     },
   ],
 };

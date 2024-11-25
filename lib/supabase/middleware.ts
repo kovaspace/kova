@@ -2,7 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  const protectedRoutes = ["/dashboard", "/bookings", "/customers"];
+  const protectedRoutes = [
+    "/dashboard",
+    "/bookings",
+    "/customers",
+    "/settings",
+    "/spaces",
+  ];
   const currentPath = request.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.includes(currentPath);
 
