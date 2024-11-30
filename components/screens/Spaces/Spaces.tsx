@@ -41,7 +41,7 @@ export default function Spaces() {
       >
         {files.map((file) => (
           <li key={file.source} className="relative">
-            <div className="group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+            <div className="group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
               <Image
                 alt="image"
                 src={file.source}
