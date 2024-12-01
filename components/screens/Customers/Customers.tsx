@@ -49,7 +49,11 @@ export default function Customers() {
 
   const { mutate: deleteCustomer } = useMutation({
     mutationFn: async (values: string) => await deletCustomer(values),
-    onSuccess: (data: any) => {
+    onSuccess: (data: {
+      first_name: string;
+      last_name: string;
+      email: string;
+    }) => {
       refetch();
       toast({
         title: "Success",

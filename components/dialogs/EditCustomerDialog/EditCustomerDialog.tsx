@@ -55,7 +55,11 @@ export default function EditCustomerDialog({
   const { mutate, isPending } = useMutation({
     mutationFn: async (values: CustomerFormData) =>
       await editCustomer(customerId, values),
-    onSuccess: (data: any) => {
+    onSuccess: (data: {
+      first_name: string;
+      last_name: string;
+      email: string;
+    }) => {
       toast({
         title: "Success",
         description: `${data.first_name} ${data.last_name} has been edited`,
