@@ -150,7 +150,6 @@ export default function Customers() {
                 <TableHead>Email</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Created at</TableHead>
-                <TableHead>Updated at</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
@@ -170,10 +169,6 @@ export default function Customers() {
                   <TableCell>
                     {moment(customer.created_at).format("DD MMM YYYY")}
                   </TableCell>
-                  <TableCell>
-                    {moment(customer.updated_at).format("DD MMM YYYY")}
-                  </TableCell>
-                  <TableCell className="text-right">$100</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
