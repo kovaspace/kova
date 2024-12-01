@@ -8,8 +8,10 @@ export async function updateSession(request: NextRequest) {
     "/customers",
     "/settings",
     "/spaces",
+    "/spaces/create",
   ];
   const currentPath = request.nextUrl.pathname;
+  console.log(currentPath);
   const isProtectedRoute = protectedRoutes.includes(currentPath);
 
   let supabaseResponse = NextResponse.next({
