@@ -1,4 +1,5 @@
 import AppSidebar from "@/components/common/AppSidebar";
+import DialogWrapper from "@/components/dialogs/DialogWrapper";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 import { ReactNode } from "react";
 
 export default function Template({ children }: { children: ReactNode }) {
@@ -37,6 +39,8 @@ export default function Template({ children }: { children: ReactNode }) {
         </header>
 
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+        <Toaster />
+        <DialogWrapper />
       </SidebarInset>
     </>
   );

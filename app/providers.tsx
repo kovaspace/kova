@@ -1,6 +1,7 @@
 "use client";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { DialogProvider } from "@/context/dialogContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactNode, useState } from "react";
@@ -21,10 +22,12 @@ const Providers = ({ children }: { children: ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        {children}
-        <ReactQueryDevtools initialIsOpen={false} />
-      </SidebarProvider>
+      <DialogProvider>
+        <SidebarProvider>
+          {children}
+          <ReactQueryDevtools initialIsOpen={false} />
+        </SidebarProvider>
+      </DialogProvider>
     </QueryClientProvider>
   );
 };
