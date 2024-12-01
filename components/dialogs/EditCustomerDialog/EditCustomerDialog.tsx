@@ -88,7 +88,7 @@ export default function EditCustomerDialog({
 
   useEffect(() => {
     const customerId = localStorage.getItem("customerId");
-    customerId && setCustomerId(customerId);
+    if (customerId) setCustomerId(customerId);
   }, []);
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function EditCustomerDialog({
     <Dialog
       open={true}
       onOpenChange={(open) => {
-        !open && onClose();
+        if (!open) onClose();
         localStorage.removeItem("customerId");
       }}
     >
