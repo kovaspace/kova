@@ -12,6 +12,7 @@ import {
   Settings2,
   SquareTerminal,
   Users,
+  Warehouse,
 } from "lucide-react";
 import * as React from "react";
 
@@ -153,6 +154,11 @@ const data = {
       name: "Customers",
       url: "/customers",
       icon: Users,
+    },
+    {
+      name: "Facilities",
+      url: "/facilities",
+      icon: Warehouse,
     },
     {
       name: "Spaces",

@@ -1,10 +1,10 @@
 import supabase from "@/lib/supabase/client";
-import { CustomerFormData } from "@/types/customers";
+import { FacilityFormData } from "@/types/facilities";
 
-async function getCustomer(id: string) {
+async function getFacility(id: string) {
   try {
     const { data, error } = await supabase
-      .from("customers")
+      .from("facilities")
       .select()
       .eq("id", id)
       .single();
@@ -17,11 +17,19 @@ async function getCustomer(id: string) {
   }
 }
 
-async function createCustomer(body: CustomerFormData) {
+async function createFacility(body: FacilityFormData) {
   try {
+    delete body.images;
+
     const { data, error } = await supabase
-      .from("customers")
-      .insert([body])
+      .from("facilities")
+      .insert([
+        {
+          ...body,
+          country: body.country[0],
+          state_province: body.country[1] ?? "",
+        },
+      ])
       .select()
       .single();
 
@@ -33,9 +41,9 @@ async function createCustomer(body: CustomerFormData) {
   }
 }
 
-async function getCustomers() {
+async function getFacilities() {
   try {
-    const { data, error } = await supabase.from("customers").select();
+    const { data, error } = await supabase.from("facilities").select();
 
     if (error) throw error;
 
@@ -45,10 +53,10 @@ async function getCustomers() {
   }
 }
 
-async function deletCustomer(id: number) {
+async function deletFacility(id: string) {
   try {
     const { data, error } = await supabase
-      .from("customers")
+      .from("facilities")
       .delete()
       .match({ id })
       .select()
@@ -62,11 +70,17 @@ async function deletCustomer(id: number) {
   }
 }
 
-async function editCustomer(id: string, body: CustomerFormData) {
+async function editFacility(id: string, body: FacilityFormData) {
   try {
     const { data, error } = await supabase
-      .from("customers")
-      .update(body)
+      .from("facilities")
+      .insert([
+        {
+          ...body,
+          country: body.country[0],
+          state_province: body.country[1] ?? "",
+        },
+      ])
       .match({ id })
       .select()
       .single();
@@ -80,9 +94,9 @@ async function editCustomer(id: string, body: CustomerFormData) {
 }
 
 export {
-  createCustomer,
-  deletCustomer,
-  getCustomer,
-  getCustomers,
-  editCustomer,
+  createFacility,
+  deletFacility,
+  getFacility,
+  getFacilities,
+  editFacility,
 };

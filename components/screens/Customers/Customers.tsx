@@ -48,7 +48,7 @@ export default function Customers() {
   });
 
   const { mutate: deleteCustomer } = useMutation({
-    mutationFn: async (values: string) => await deletCustomer(values),
+    mutationFn: async (values: number) => await deletCustomer(values),
     onSuccess: (data: {
       first_name: string;
       last_name: string;
@@ -184,7 +184,10 @@ export default function Customers() {
                         <DropdownMenuItem>View details</DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
-                            localStorage.setItem("customerId", customer.id);
+                            localStorage.setItem(
+                              "customerId",
+                              String(customer.id)
+                            );
                             setOpenDialog("editCustomer");
                           }}
                         >

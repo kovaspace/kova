@@ -78,8 +78,8 @@ export default function EditCustomerDialog({
   const form = useForm<CustomerFormData>({
     resolver: zodResolver(CustomerSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       email: "",
     },
   });
@@ -94,8 +94,8 @@ export default function EditCustomerDialog({
   useEffect(() => {
     if (customer) {
       reset({
-        firstName: customer.first_name,
-        lastName: customer.last_name,
+        first_name: customer.first_name,
+        last_name: customer.last_name,
         email: customer.email,
       });
     }
@@ -130,7 +130,7 @@ export default function EditCustomerDialog({
             <div className="flex flex-col space-y-2">
               <FormField
                 control={control}
-                name="firstName"
+                name="first_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
@@ -148,7 +148,7 @@ export default function EditCustomerDialog({
 
               <FormField
                 control={control}
-                name="lastName"
+                name="last_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>

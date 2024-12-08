@@ -36,8 +36,8 @@ export default function AddCustomerDialog({ onClose }: AddCustomerDialogProps) {
   const form = useForm<CustomerFormData>({
     resolver: zodResolver(CustomerSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       email: "",
     },
   });
@@ -79,7 +79,7 @@ export default function AddCustomerDialog({ onClose }: AddCustomerDialogProps) {
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form
-            id="bookingForm"
+            id="addCustomerForm"
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col space-y-5"
           >
@@ -93,7 +93,7 @@ export default function AddCustomerDialog({ onClose }: AddCustomerDialogProps) {
             <div className="flex flex-col space-y-2">
               <FormField
                 control={control}
-                name="firstName"
+                name="first_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
@@ -111,7 +111,7 @@ export default function AddCustomerDialog({ onClose }: AddCustomerDialogProps) {
 
               <FormField
                 control={control}
-                name="lastName"
+                name="last_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
