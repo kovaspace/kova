@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const facilitiesSchema = z.object({
-  name: z.string().min(1, "First name is required"),
+  name: z.string().min(1, "Facility name is required"),
   address: z.string().min(1, "Address is required"),
   city: z.string().min(1, "City is required"),
   country: z.tuple([
@@ -12,6 +12,7 @@ export const facilitiesSchema = z.object({
   phone_number: z.string().min(1, "Phone number is required"),
   images: z.string().optional(),
   description: z.string().min(1, "Description is required"),
+  status: z.enum(["active", "inactive", "archived"]),
 });
 
 export type FacilityFormData = z.infer<typeof facilitiesSchema>;

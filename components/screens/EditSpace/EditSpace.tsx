@@ -21,19 +21,23 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { getFacilities } from "@/helpers/api/facilities";
-import { createSpace, getSpaces } from "@/helpers/api/spaces";
+import { editSpace, getSpace, getSpaces } from "@/helpers/api/spaces";
 import { useToast } from "@/hooks/useToast";
 import { SpaceFormData, spaceSchema } from "@/types/spaces";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-export default function MyForm() {
+export default function EditSpace() {
   // const [files, setFiles] = useState<File[] | null>(null);
 
   const router = useRouter();
+  const pathname = usePathname();
   const { toast } = useToast();
+
+  const spaceId = pathname.split("/").pop();
 
   // const dropZoneConfig = {
   //   maxFiles: 5,
@@ -51,6 +55,12 @@ export default function MyForm() {
     queryFn: getSpaces,
   });
 
+  const { data: space, refetch: refetchSpace } = useQuery({
+    queryKey: ["space", spaceId],
+    queryFn: async () => await getSpace(spaceId as string),
+    enabled: !!spaceId,
+  });
+
   const form = useForm<SpaceFormData>({
     resolver: zodResolver(spaceSchema),
     defaultValues: {
@@ -62,15 +72,17 @@ export default function MyForm() {
     },
   });
 
-  const { handleSubmit, control } = form;
+  const { handleSubmit, control, reset } = form;
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (values: SpaceFormData) => await createSpace(values),
+    mutationFn: async (values: SpaceFormData) =>
+      await editSpace(spaceId as string, values),
     onSuccess: () => {
       toast({
         title: "Success",
-        description: "Space created successfully",
+        description: "Space edited successfully",
       });
+      refetchSpace();
       refetchSpaces();
       router.push("/spaces");
     },
@@ -86,13 +98,25 @@ export default function MyForm() {
     mutate(values);
   };
 
+  useEffect(() => {
+    if (space) {
+      reset({
+        name: space.name,
+        hourly_rate: space.hourly_rate,
+        description: space.description,
+        facilities_id: space.facilities_id,
+        status: space.status,
+      });
+    }
+  }, [space, reset]);
+
   return (
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-8 max-w-3xl mx-auto py-10"
       >
-        <h1 className="text-3xl font-bold tracking-tight">Create Space</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Edit Space</h1>
 
         <FormField
           control={control}
@@ -102,6 +126,7 @@ export default function MyForm() {
               <FormLabel>Facility</FormLabel>
               <Select
                 onValueChange={field.onChange}
+                defaultValue={space?.facilities_id}
                 disabled={isLoading}
                 {...field}
               >

@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import LocationSelector from "@/components/ui/location-input";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { createFacility, getFacilities } from "@/helpers/api/facilities";
 import { useToast } from "@/hooks/useToast";
@@ -55,6 +56,7 @@ export default function CreateFacility() {
       phone_number: "",
       images: "",
       description: "",
+      status: "inactive",
     },
   });
 
@@ -64,16 +66,17 @@ export default function CreateFacility() {
     queryKey: ["facilities"],
     queryFn: getFacilities,
   });
+
   const { mutate, isPending } = useMutation({
     mutationFn: async (values: FacilityFormData) =>
       await createFacility(values),
     onSuccess: () => {
-      refetch();
-      router.push("/facilities");
       toast({
         title: "Success",
         description: "Facility created successfully",
       });
+      refetch();
+      router.push("/facilities");
     },
     onError: (error) => {
       toast({
@@ -84,6 +87,7 @@ export default function CreateFacility() {
   });
 
   const onSubmit = (values: FacilityFormData) => {
+    console.log(values);
     mutate(values);
   };
 
@@ -284,9 +288,9 @@ export default function CreateFacility() {
           )}
         />
 
-        {/* <FormField
+        <FormField
           control={control}
-          name="active"
+          name="status"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
@@ -298,14 +302,16 @@ export default function CreateFacility() {
               </div>
               <FormControl>
                 <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+                  checked={field.value === "active" ? true : false}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked ? "active" : "inactive");
+                  }}
                   aria-readonly
                 />
               </FormControl>
             </FormItem>
           )}
-        /> */}
+        />
 
         <Button type="submit" disabled={isPending}>
           Submit

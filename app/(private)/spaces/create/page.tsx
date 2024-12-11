@@ -34,7 +34,7 @@ export default function page() {
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbLink>
+                <BreadcrumbLink asChild>
                   <Link href="/spaces">Spaces</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>

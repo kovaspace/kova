@@ -44,6 +44,7 @@ export default function Spaces() {
               />
               <button
                 type="button"
+                onClick={() => router.push(`/spaces/edit/${space.id}`)}
                 className="absolute inset-0 focus:outline-none"
               >
                 <span className="sr-only">View details for {space.name}</span>

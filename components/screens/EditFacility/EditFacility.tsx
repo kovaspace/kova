@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import LocationSelector from "@/components/ui/location-input";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   editFacility,
@@ -61,18 +62,19 @@ export default function EditFacility() {
       phone_number: "",
       images: "",
       description: "",
+      status: "inactive",
     },
   });
 
   const { setValue, handleSubmit, control, reset } = form;
 
-  const { refetch } = useQuery({
+  const { refetch: refetchFacilities } = useQuery({
     queryKey: ["facilities"],
     queryFn: getFacilities,
   });
 
-  const { data: facility } = useQuery({
-    queryKey: ["facility"],
+  const { data: facility, refetch: refetchFacility } = useQuery({
+    queryKey: ["facility", facilityId],
     queryFn: async () => await getFacility(facilityId as string),
   });
 
@@ -80,7 +82,8 @@ export default function EditFacility() {
     mutationFn: async (values: FacilityFormData) =>
       await editFacility(String(facility?.id), values),
     onSuccess: () => {
-      refetch();
+      refetchFacilities();
+      refetchFacility();
       router.push("/facilities");
       toast({
         title: "Success",
@@ -110,11 +113,13 @@ export default function EditFacility() {
         phone_number: facility.phone_number,
         images: "",
         description: facility.description,
+        status: facility.status,
       });
+
+      setCountryName(facility.country);
+      setStateName(facility.state_province);
     }
   }, [facility, reset]);
-
-  console.log(form.getValues("country"));
 
   return (
     <Form {...form}>
@@ -314,9 +319,9 @@ export default function EditFacility() {
           )}
         />
 
-        {/* <FormField
+        <FormField
           control={control}
-          name="active"
+          name="status"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
@@ -328,14 +333,16 @@ export default function EditFacility() {
               </div>
               <FormControl>
                 <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+                  checked={field.value === "active" ? true : false}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked ? "active" : "inactive");
+                  }}
                   aria-readonly
                 />
               </FormControl>
             </FormItem>
           )}
-        /> */}
+        />
 
         <Button type="submit" disabled={isPending}>
           Submit

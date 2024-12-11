@@ -150,7 +150,7 @@ export default function AddCustomerDialog({ onClose }: AddCustomerDialogProps) {
 
             <DialogFooter>
               <Button type="submit" disabled={isPending}>
-                Save changes
+                Create user
               </Button>
             </DialogFooter>
           </form>

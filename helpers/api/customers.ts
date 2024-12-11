@@ -45,7 +45,7 @@ async function getCustomers() {
   }
 }
 
-async function deletCustomer(id: number) {
+async function deletCustomer(id: string) {
   try {
     const { data, error } = await supabase
       .from("customers")

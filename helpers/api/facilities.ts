@@ -72,15 +72,15 @@ async function deletFacility(id: string) {
 
 async function editFacility(id: string, body: FacilityFormData) {
   try {
+    delete body.images;
+
     const { data, error } = await supabase
       .from("facilities")
-      .insert([
-        {
-          ...body,
-          country: body.country[0],
-          state_province: body.country[1] ?? "",
-        },
-      ])
+      .update({
+        ...body,
+        country: body.country[0],
+        state_province: body.country[1] ?? "",
+      })
       .match({ id })
       .select()
       .single();

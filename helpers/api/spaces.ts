@@ -1,5 +1,5 @@
 import supabase from "@/lib/supabase/client";
-// import { SpaceFormData } from "@/types/spaces";
+import { SpaceFormData } from "@/types/spaces";
 
 async function getSpace(id: string) {
   try {
@@ -17,22 +17,21 @@ async function getSpace(id: string) {
   }
 }
 
-// async function createSpace(body: SpaceFormData) {
-//   try {
-//     const { firstName, lastName, email } = body;
-//     const { data, error } = await supabase
-//       .from("spaces")
-//       .insert([{ first_name: firstName, last_name: lastName, email }])
-//       .select()
-//       .single();
+async function createSpace(body: SpaceFormData) {
+  try {
+    const { data, error } = await supabase
+      .from("spaces")
+      .insert(body)
+      .select()
+      .single();
 
-//     if (error) throw error;
+    if (error) throw error;
 
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 async function getSpaces() {
   try {
@@ -67,28 +66,21 @@ async function deletSpace(id: string) {
   }
 }
 
-// async function editSpace(id: string, body: SpaceFormData) {
-//   try {
-//     const { firstName, lastName, email } = body;
-//     const { data, error } = await supabase
-//       .from("spaces")
-//       .update({ first_name: firstName, last_name: lastName, email })
-//       .match({ id })
-//       .select()
-//       .single();
+async function editSpace(id: string, body: SpaceFormData) {
+  try {
+    const { data, error } = await supabase
+      .from("spaces")
+      .update(body)
+      .match({ id })
+      .select()
+      .single();
 
-//     if (error) throw error;
+    if (error) throw error;
 
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
 
-export {
-  // createSpace,
-  deletSpace,
-  getSpace,
-  getSpaces,
-  // editSpace,
-};
+export { createSpace, deletSpace, getSpace, getSpaces, editSpace };

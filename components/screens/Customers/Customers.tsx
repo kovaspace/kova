@@ -48,20 +48,24 @@ export default function Customers() {
   });
 
   const { mutate: deleteCustomer } = useMutation({
-    mutationFn: async (values: number) => await deletCustomer(values),
+    mutationFn: async (values: string) => await deletCustomer(values),
     onSuccess: (data: {
       first_name: string;
       last_name: string;
       email: string;
     }) => {
-      refetch();
       toast({
         title: "Success",
         description: `${data.first_name} ${data.last_name} has been deleted`,
       });
+      refetch();
     },
     onError: (error) => {
       console.log(error);
+      toast({
+        title: "Error",
+        description: `Failed to delete customer`,
+      });
     },
   });
 

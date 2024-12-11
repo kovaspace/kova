@@ -26,6 +26,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/helpers/api/users";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // This is sample data.
 const data = {
@@ -171,6 +174,37 @@ const data = {
 export default function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data: currentUser } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getCurrentUser,
+  });
+
+  if (!currentUser) {
+    return (
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader>
+          <TeamSwitcher teams={data.teams} />
+        </SidebarHeader>
+        <SidebarContent>
+          {/* <NavMain items={data.navMain} /> */}
+          <NavProjects projects={data.projects} />
+        </SidebarContent>
+        <SidebarFooter>
+          <div className="flex items-center space-x-4">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[170px]" />
+              <Skeleton className="h-4 w-[110px]" />
+            </div>
+          </div>
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+    );
+  }
+
+  const { first_name, last_name, email } = currentUser;
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -181,7 +215,14 @@ export default function AppSidebar({
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser
+          user={{
+            first_name,
+            last_name,
+            email,
+            avatar: "https://github.com/shadcn.png",
+          }}
+        />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

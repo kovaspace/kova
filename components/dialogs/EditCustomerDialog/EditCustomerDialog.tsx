@@ -187,7 +187,7 @@ export default function EditCustomerDialog({
 
             <DialogFooter>
               <Button type="submit" disabled={isPending}>
-                Save changes
+                Edit user
               </Button>
             </DialogFooter>
           </form>
