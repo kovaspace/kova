@@ -55,6 +55,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      bookings: {
+        Row: {
+          created_at: string;
+          customers_id: string;
+          date: string;
+          end_time: string;
+          id: number;
+          spaces_id: string;
+          start_time: string;
+        };
+        Insert: {
+          created_at?: string;
+          customers_id: string;
+          date: string;
+          end_time: string;
+          id?: number;
+          spaces_id: string;
+          start_time: string;
+        };
+        Update: {
+          created_at?: string;
+          customers_id?: string;
+          date?: string;
+          end_time?: string;
+          id?: number;
+          spaces_id?: string;
+          start_time?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bookings_customers_id_fkey";
+            columns: ["customers_id"];
+            isOneToOne: false;
+            referencedRelation: "customers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bookings_spaces_id_fkey";
+            columns: ["spaces_id"];
+            isOneToOne: false;
+            referencedRelation: "spaces";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       customers: {
         Row: {
           created_at: string;
@@ -127,7 +172,7 @@ export type Database = {
           description: string;
           facilities_id: string;
           hourly_rate: number;
-          id: number;
+          id: string;
           name: string;
           status: Database["public"]["Enums"]["spaces_status"];
         };
@@ -136,7 +181,7 @@ export type Database = {
           description: string;
           facilities_id?: string;
           hourly_rate: number;
-          id?: number;
+          id?: string;
           name: string;
           status?: Database["public"]["Enums"]["spaces_status"];
         };
@@ -145,7 +190,7 @@ export type Database = {
           description?: string;
           facilities_id?: string;
           hourly_rate?: number;
-          id?: number;
+          id?: string;
           name?: string;
           status?: Database["public"]["Enums"]["spaces_status"];
         };
@@ -167,14 +212,16 @@ export type Database = {
           first_name: string;
           id: string;
           last_name: string;
+          type: Database["public"]["Enums"]["user_type"];
         };
         Insert: {
           accounts_id: string;
           created_at?: string;
           email: string;
           first_name: string;
-          id?: string;
+          id: string;
           last_name: string;
+          type: Database["public"]["Enums"]["user_type"];
         };
         Update: {
           accounts_id?: string;
@@ -183,6 +230,7 @@ export type Database = {
           first_name?: string;
           id?: string;
           last_name?: string;
+          type?: Database["public"]["Enums"]["user_type"];
         };
         Relationships: [
           {
@@ -203,7 +251,6 @@ export type Database = {
     };
     Enums: {
       account_status: "active" | "email_verification" | "inactive" | "disabled";
-      account_type: "consignor" | "distributor" | "retailer";
       facilities_status: "active" | "inactive" | "archived";
       spaces_status: "active" | "inactive" | "archived";
       user_status:
@@ -212,6 +259,7 @@ export type Database = {
         | "disabled"
         | "email_verification"
         | "invited";
+      user_type: "admin" | "member";
     };
     CompositeTypes: {
       [_ in never]: never;

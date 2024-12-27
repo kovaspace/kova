@@ -1,45 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/useToast";
-import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 import {
   ArrowUpDown,
-  CalendarIcon,
   ChevronDown,
   MoreHorizontal,
   Plus,
   Search,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Badge } from "@/components/ui/badge";
@@ -68,6 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getBookings } from "@/helpers/api/bookings";
 import { BookingFormData, BookingSchema } from "@/types/bookings";
 
 export default function Bookings() {
@@ -88,30 +62,16 @@ export default function Bookings() {
     },
   });
 
-  const selectedFacility = form.watch("facilityId");
-  const availableSpaces = useMemo(() => {
-    return selectedFacility
-      ? SPACES[selectedFacility as keyof typeof SPACES]
-      : [];
-  }, [selectedFacility]);
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (data: BookingFormData) => console.log(data),
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (error) => {
-      console.log(error);
-      toast({
-        title: "Error",
-        description: "An error occurred while creating the booking.",
-        variant: "destructive",
-      });
-    },
+  const { data: bookings, isLoading } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: getBookings,
   });
 
-  function onSubmit(values: BookingFormData) {
-    mutate(values);
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+  if (!bookings) {
+    return "No bookings found";
   }
 
   return (
@@ -222,40 +182,32 @@ export default function Bookings() {
                 </TableHead>
                 <TableHead>
                   <Button variant="ghost" className="p-0 hover:bg-transparent">
-                    Booking
+                    Customer
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                   </Button>
                 </TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last Order</TableHead>
-                <TableHead className="text-right">Total Spent</TableHead>
+                <TableHead>Facility</TableHead>
+                <TableHead>Space</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Start Time</TableHead>
+                <TableHead>End Time</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {customers.map((customer) => (
-                <TableRow key={customer.id}>
+              {bookings.map((booking) => (
+                <TableRow key={booking.id}>
                   <TableCell>
                     <Checkbox />
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium">{customer.name}</div>
+                    <div className="font-medium">{`${booking.customers?.first_name} ${booking.customers?.last_name}`}</div>
                   </TableCell>
-                  <TableCell>{customer.email}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        customer.status === "Active" ? "default" : "secondary"
-                      }
-                    >
-                      {customer.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{customer.lastOrder}</TableCell>
-                  <TableCell className="text-right">
-                    ${customer.totalSpent.toFixed(2)}
-                  </TableCell>
+                  <TableCell>{booking.spaces?.facilities?.name}</TableCell>
+                  <TableCell>{booking.spaces?.name}</TableCell>
+                  <TableCell>{booking.date}</TableCell>
+                  <TableCell>{booking.start_time}</TableCell>
+                  <TableCell>{booking.end_time}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -265,10 +217,10 @@ export default function Bookings() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>View details</DropdownMenuItem>
-                        <DropdownMenuItem>Edit customer</DropdownMenuItem>
+                        <DropdownMenuItem>Edit booking</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-destructive">
-                          Delete customer
+                          Delete booking
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -279,215 +231,6 @@ export default function Bookings() {
           </Table>
         </CardContent>
       </Card>
-
-      <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
-        <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Book a Space</DialogTitle>
-            <DialogDescription>
-              Fill in the details to book your desired space. Click save when
-              you&apos;re done.
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...form}>
-            <form id="bookingForm" onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="facilityId" className="text-right">
-                    Facility
-                  </Label>
-                  <FormField
-                    control={form.control}
-                    name="facilityId"
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          form.setValue("spaceId", "");
-                        }}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="col-span-3">
-                            <SelectValue placeholder="Select a facility" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {FACILITIES.map((facility) => (
-                            <SelectItem key={facility.id} value={facility.id}>
-                              {facility.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="spaceId" className="text-right">
-                    Space
-                  </Label>
-                  <FormField
-                    control={form.control}
-                    name="spaceId"
-                    render={({ field }) => (
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        disabled={!selectedFacility}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="col-span-3">
-                            <SelectValue placeholder="Select a space" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {availableSpaces.map((space) => (
-                            <SelectItem key={space.id} value={space.id}>
-                              {space.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="date" className="text-right">
-                    Date
-                  </Label>
-                  <FormField
-                    control={form.control}
-                    name="date"
-                    render={({ field }) => (
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "col-span-3 text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date < new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    )}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="startTime" className="text-right">
-                    Time
-                  </Label>
-                  <div className="col-span-3 flex space-x-2">
-                    <FormField
-                      control={form.control}
-                      name="startTime"
-                      render={({ field }) => (
-                        <FormControl>
-                          <Input
-                            type="time"
-                            {...field}
-                            className="w-full"
-                            placeholder="Start"
-                          />
-                        </FormControl>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="endTime"
-                      render={({ field }) => (
-                        <FormControl>
-                          <Input
-                            type="time"
-                            {...field}
-                            className="w-full"
-                            placeholder="End"
-                          />
-                        </FormControl>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="numberOfPeople" className="text-right">
-                    Number of People
-                  </Label>
-                  <FormField
-                    control={form.control}
-                    name="numberOfPeople"
-                    render={({ field }) => (
-                      <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value))
-                          }
-                          className="col-span-3"
-                        />
-                      </FormControl>
-                    )}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="purpose" className="text-right">
-                    Purpose
-                  </Label>
-                  <FormField
-                    control={form.control}
-                    name="purpose"
-                    render={({ field }) => (
-                      <FormControl>
-                        <Input {...field} className="col-span-3" />
-                      </FormControl>
-                    )}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="additionalNotes" className="text-right">
-                    Additional Notes
-                  </Label>
-                  <FormField
-                    control={form.control}
-                    name="additionalNotes"
-                    render={({ field }) => (
-                      <FormControl>
-                        <Textarea {...field} className="col-span-3" />
-                      </FormControl>
-                    )}
-                  />
-                </div>
-              </div>
-            </form>
-          </Form>
-          <DialogFooter>
-            <Button type="submit" form="bookingForm" disabled={isPending}>
-              {isPending ? "Booking..." : "Book Now"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
@@ -534,24 +277,3 @@ const customers = [
     totalSpent: 543.21,
   },
 ];
-
-const FACILITIES = [
-  { id: "sports", name: "Sports Complex" },
-  { id: "studio", name: "Photo Studio" },
-  { id: "party", name: "Party Venue" },
-];
-
-const SPACES = {
-  sports: [
-    { id: "court1", name: "Basketball Court 1" },
-    { id: "court2", name: "Basketball Court 2" },
-  ],
-  studio: [
-    { id: "studio1", name: "Photo Studio A" },
-    { id: "studio2", name: "Photo Studio B" },
-  ],
-  party: [
-    { id: "partyroom1", name: "Party Room 1" },
-    { id: "partyroom2", name: "Party Room 2" },
-  ],
-};

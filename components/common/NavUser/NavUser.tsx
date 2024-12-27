@@ -35,7 +35,7 @@ export default function NavUser({
   user: {
     first_name: string;
     last_name: string;
-    email: string;
+    company_name: string;
     avatar: string;
   };
 }) {
@@ -66,7 +66,7 @@ export default function NavUser({
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{fullName}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate text-xs">{user.company_name}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -85,7 +85,7 @@ export default function NavUser({
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{fullName}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate text-xs">{user.company_name}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

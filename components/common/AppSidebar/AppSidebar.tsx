@@ -16,19 +16,23 @@ import {
 } from "lucide-react";
 import * as React from "react";
 
+import sidebarLogo from "@/assets/images/sidebar_logo.png";
 import NavProjects from "@/components/common/NavProjects";
 import NavUser from "@/components/common/NavUser";
-import TeamSwitcher from "@/components/common/TeamSwitcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useQuery } from "@tanstack/react-query";
-import { getCurrentUser } from "@/helpers/api/users";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getCurrentUser } from "@/helpers/api/users";
+import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // This is sample data.
 const data = {
@@ -174,19 +178,39 @@ const data = {
 export default function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { data: currentUser } = useQuery({
+  const router = useRouter();
+
+  const { data: currentUser, isLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: getCurrentUser,
   });
 
-  if (!currentUser) {
+  if (isLoading || !currentUser) {
     return (
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
-          <TeamSwitcher teams={data.teams} />
+          <SidebarMenu>
+            <SidebarMenuButton size="lg">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <Image
+                  src={sidebarLogo}
+                  alt="Nocta Logo"
+                  height={16}
+                  width={16}
+                />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">
+                  <Skeleton className="h-3 w-[170px]" />
+                </span>
+                <span className="truncate text-xs">
+                  <Skeleton className="h-3 w-[100px]" />
+                </span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          {/* <NavMain items={data.navMain} /> */}
           <NavProjects projects={data.projects} />
         </SidebarContent>
         <SidebarFooter>
@@ -203,15 +227,32 @@ export default function AppSidebar({
     );
   }
 
-  const { first_name, last_name, email } = currentUser;
+  const { first_name, last_name, accounts } = currentUser;
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <SidebarMenu>
+          <SidebarMenuButton
+            size="lg"
+            onClick={() => router.push("/dashboard")}
+          >
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <Image
+                src={sidebarLogo}
+                alt="Nocta Logo"
+                height={16}
+                width={16}
+              />
+            </div>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-semibold">Nocta</span>
+              <span className="truncate text-xs">Enterprise</span>
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {/* <NavMain items={data.navMain} /> */}
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
@@ -219,7 +260,7 @@ export default function AppSidebar({
           user={{
             first_name,
             last_name,
-            email,
+            company_name: accounts?.name ?? "Company name not found",
             avatar: "https://github.com/shadcn.png",
           }}
         />
