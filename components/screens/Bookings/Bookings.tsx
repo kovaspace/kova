@@ -3,9 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/useToast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   ArrowUpDown,
   ChevronDown,
@@ -13,10 +11,7 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -42,30 +37,38 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getBookings } from "@/helpers/api/bookings";
-import { BookingFormData, BookingSchema } from "@/types/bookings";
+import { useDialogContext } from "@/context/dialogContext";
+import { deleteBooking, getBookings } from "@/helpers/api/bookings";
+import { useToast } from "@/hooks/useToast";
 
 export default function Bookings() {
-  const [open, setOpen] = useState<boolean>(false);
   const { toast } = useToast();
+  const { setOpenDialog } = useDialogContext();
 
-  const form = useForm<BookingFormData>({
-    resolver: zodResolver(BookingSchema),
-    defaultValues: {
-      facilityId: "",
-      spaceId: "",
-      date: new Date(),
-      startTime: "",
-      endTime: "",
-      numberOfPeople: 1,
-      purpose: "",
-      additionalNotes: "",
-    },
-  });
-
-  const { data: bookings, isLoading } = useQuery({
+  const {
+    data: bookings,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["bookings"],
     queryFn: getBookings,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: deleteBooking,
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Booking deleted succesfully",
+      });
+      refetch();
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+      });
+    },
   });
 
   if (isLoading) {
@@ -79,7 +82,7 @@ export default function Bookings() {
     <>
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
-        <Button onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpenDialog("addBooking")}>
           <Plus className="mr-2 h-4 w-4" />
           Add Booking
         </Button>
@@ -220,7 +223,10 @@ export default function Bookings() {
                         <DropdownMenuItem>View details</DropdownMenuItem>
                         <DropdownMenuItem>Edit booking</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-destructive">
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => mutate(booking.id)}
+                        >
                           Delete booking
                         </DropdownMenuItem>
                       </DropdownMenuContent>

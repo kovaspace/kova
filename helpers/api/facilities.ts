@@ -17,6 +17,21 @@ async function getFacility(id: string) {
   }
 }
 
+async function getFacilities() {
+  try {
+    const { data, error } = await supabase
+      .from("facilities")
+      .select("*, spaces (*)")
+      .select();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function createFacility(body: FacilityFormData) {
   try {
     delete body.images;
@@ -32,18 +47,6 @@ async function createFacility(body: FacilityFormData) {
       ])
       .select()
       .single();
-
-    if (error) throw error;
-
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function getFacilities() {
-  try {
-    const { data, error } = await supabase.from("facilities").select();
 
     if (error) throw error;
 

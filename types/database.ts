@@ -58,42 +58,42 @@ export type Database = {
       bookings: {
         Row: {
           created_at: string;
-          customers_id: string;
+          customer_id: string;
           date: string;
           end_time: string;
           id: number;
-          spaces_id: string;
+          space_id: string;
           start_time: string;
         };
         Insert: {
           created_at?: string;
-          customers_id: string;
+          customer_id: string;
           date: string;
           end_time: string;
           id?: number;
-          spaces_id: string;
+          space_id: string;
           start_time: string;
         };
         Update: {
           created_at?: string;
-          customers_id?: string;
+          customer_id?: string;
           date?: string;
           end_time?: string;
           id?: number;
-          spaces_id?: string;
+          space_id?: string;
           start_time?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "bookings_customers_id_fkey";
-            columns: ["customers_id"];
+            foreignKeyName: "bookings_customer_id_fkey";
+            columns: ["customer_id"];
             isOneToOne: false;
             referencedRelation: "customers";
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "bookings_spaces_id_fkey";
-            columns: ["spaces_id"];
+            foreignKeyName: "bookings_space_id_fkey";
+            columns: ["space_id"];
             isOneToOne: false;
             referencedRelation: "spaces";
             referencedColumns: ["id"];
@@ -170,7 +170,7 @@ export type Database = {
         Row: {
           created_at: string;
           description: string;
-          facilities_id: string;
+          facility_id: string;
           hourly_rate: number;
           id: string;
           name: string;
@@ -179,7 +179,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           description: string;
-          facilities_id?: string;
+          facility_id?: string;
           hourly_rate: number;
           id?: string;
           name: string;
@@ -188,7 +188,7 @@ export type Database = {
         Update: {
           created_at?: string;
           description?: string;
-          facilities_id?: string;
+          facility_id?: string;
           hourly_rate?: number;
           id?: string;
           name?: string;
@@ -197,7 +197,7 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "spaces_facility_id_fkey";
-            columns: ["facilities_id"];
+            columns: ["facility_id"];
             isOneToOne: false;
             referencedRelation: "facilities";
             referencedColumns: ["id"];
@@ -206,7 +206,7 @@ export type Database = {
       };
       users: {
         Row: {
-          accounts_id: string;
+          account_id: string;
           created_at: string;
           email: string;
           first_name: string;
@@ -215,7 +215,7 @@ export type Database = {
           type: Database["public"]["Enums"]["user_type"];
         };
         Insert: {
-          accounts_id: string;
+          account_id: string;
           created_at?: string;
           email: string;
           first_name: string;
@@ -224,7 +224,7 @@ export type Database = {
           type: Database["public"]["Enums"]["user_type"];
         };
         Update: {
-          accounts_id?: string;
+          account_id?: string;
           created_at?: string;
           email?: string;
           first_name?: string;
@@ -234,8 +234,8 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "users_accounts_id_fkey";
-            columns: ["accounts_id"];
+            foreignKeyName: "users_account_id_fkey";
+            columns: ["account_id"];
             isOneToOne: false;
             referencedRelation: "accounts";
             referencedColumns: ["id"];

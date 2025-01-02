@@ -194,7 +194,7 @@ export default function AppSidebar({
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                 <Image
                   src={sidebarLogo}
-                  alt="Nocta Logo"
+                  alt="Kova Logo"
                   height={16}
                   width={16}
                 />
@@ -238,15 +238,10 @@ export default function AppSidebar({
             onClick={() => router.push("/dashboard")}
           >
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <Image
-                src={sidebarLogo}
-                alt="Nocta Logo"
-                height={16}
-                width={16}
-              />
+              <Image src={sidebarLogo} alt="Kova Logo" height={16} width={16} />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">Nocta</span>
+              <span className="truncate font-semibold">Kova</span>
               <span className="truncate text-xs">Enterprise</span>
             </div>
           </SidebarMenuButton>

@@ -57,7 +57,7 @@ export default function MyForm() {
       name: "",
       hourly_rate: 0,
       description: "",
-      facilities_id: undefined,
+      facility_id: undefined,
       status: "inactive",
     },
   });
@@ -96,7 +96,7 @@ export default function MyForm() {
 
         <FormField
           control={control}
-          name="facilities_id"
+          name="facility_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Facility</FormLabel>

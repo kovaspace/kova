@@ -3,6 +3,7 @@
 import { useDialogContext } from "@/context/dialogContext";
 import AddCustomerDialog from "../AddCustomerDialog/AddCustomerDialog";
 import EditCustomerDialog from "../EditCustomerDialog";
+import AddBookingDialog from "../AddBookingDialog";
 
 const DialogWrapper = () => {
   const { openDialog, setOpenDialog } = useDialogContext();
@@ -13,6 +14,9 @@ const DialogWrapper = () => {
     <>
       {openDialog === "addCustomer" && (
         <AddCustomerDialog onClose={closeDialog} />
+      )}
+      {openDialog === "addBooking" && (
+        <AddBookingDialog onClose={closeDialog} />
       )}
       {openDialog === "editCustomer" && (
         <EditCustomerDialog onClose={closeDialog} />

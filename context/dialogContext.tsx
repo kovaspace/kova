@@ -1,7 +1,7 @@
 "use client";
 import { createContext, ReactNode, useContext, useState } from "react";
 
-type DialogTypes = "addCustomer" | "editCustomer" | null;
+type DialogTypes = "addCustomer" | "addBooking" | "editCustomer" | null;
 
 type DialogContextType = {
   openDialog: DialogTypes;

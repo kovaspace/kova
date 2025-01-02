@@ -17,13 +17,13 @@ async function getSpace(id: string) {
   }
 }
 
-async function createSpace(body: SpaceFormData) {
+async function getSpaces() {
   try {
-    const { data, error } = await supabase
+    const spacesWithFacilities = supabase
       .from("spaces")
-      .insert(body)
-      .select()
-      .single();
+      .select("*, facilities (name)");
+
+    const { data, error } = await spacesWithFacilities;
 
     if (error) throw error;
 
@@ -33,13 +33,30 @@ async function createSpace(body: SpaceFormData) {
   }
 }
 
-async function getSpaces() {
+async function getSpacesByFacilityId(facility_id: string) {
   try {
     const spacesWithFacilities = supabase
       .from("spaces")
-      .select("*, facilities (name)");
+      .select("*")
+      .eq("facility_id", facility_id);
 
     const { data, error } = await spacesWithFacilities;
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function createSpace(body: SpaceFormData) {
+  try {
+    const { data, error } = await supabase
+      .from("spaces")
+      .insert(body)
+      .select()
+      .single();
 
     if (error) throw error;
 
@@ -83,4 +100,11 @@ async function editSpace(id: string, body: SpaceFormData) {
   }
 }
 
-export { createSpace, deletSpace, getSpace, getSpaces, editSpace };
+export {
+  createSpace,
+  deletSpace,
+  getSpace,
+  getSpaces,
+  editSpace,
+  getSpacesByFacilityId,
+};

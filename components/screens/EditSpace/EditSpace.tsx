@@ -67,7 +67,7 @@ export default function EditSpace() {
       name: "",
       hourly_rate: 0,
       description: "",
-      facilities_id: undefined,
+      facility_id: undefined,
       status: "inactive",
     },
   });
@@ -104,7 +104,7 @@ export default function EditSpace() {
         name: space.name,
         hourly_rate: space.hourly_rate,
         description: space.description,
-        facilities_id: space.facilities_id,
+        facility_id: space.facility_id,
         status: space.status,
       });
     }
@@ -120,13 +120,13 @@ export default function EditSpace() {
 
         <FormField
           control={control}
-          name="facilities_id"
+          name="facility_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Facility</FormLabel>
               <Select
                 onValueChange={field.onChange}
-                defaultValue={space?.facilities_id}
+                defaultValue={space?.facility_id}
                 disabled={isLoading}
                 {...field}
               >
