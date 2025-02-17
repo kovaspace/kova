@@ -40,6 +40,7 @@ import {
 import { useDialogContext } from "@/context/dialogContext";
 import { deleteBooking, getBookings } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
+import { formatAMPM, formatDate } from "@/helpers/utils";
 
 export default function Bookings() {
   const { toast } = useToast();
@@ -209,9 +210,9 @@ export default function Bookings() {
                   </TableCell>
                   <TableCell>{booking.spaces?.facilities?.name}</TableCell>
                   <TableCell>{booking.spaces?.name}</TableCell>
-                  <TableCell>{booking.date}</TableCell>
-                  <TableCell>{booking.start_time}</TableCell>
-                  <TableCell>{booking.end_time}</TableCell>
+                  <TableCell>{formatDate(booking.date)}</TableCell>
+                  <TableCell>{formatAMPM(booking.start_time)}</TableCell>
+                  <TableCell>{formatAMPM(booking.end_time)}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
