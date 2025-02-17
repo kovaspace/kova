@@ -14,11 +14,15 @@ import { getCustomer } from "@/helpers/api";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 import { formatDate } from "@/helpers/utils";
+import { usePathname } from "next/navigation";
 
-export default function CustomerDetails({ id }: { id: string }) {
+export default function CustomerDetails() {
+  const pathname = usePathname();
+  const customerId = pathname.split("/").pop();
+
   const { data: customer, isLoading } = useQuery({
-    queryKey: ["customer", id],
-    queryFn: () => getCustomer(id),
+    queryKey: ["customer", customerId],
+    queryFn: () => getCustomer(customerId as string),
   });
 
   if (isLoading) return <div>Loading...</div>;
