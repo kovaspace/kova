@@ -2,7 +2,6 @@
 
 import { MoreHorizontal, Plus, Search } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,13 +29,17 @@ import {
 
 import { useDialogContext } from "@/context/dialogContext";
 import { deletCustomer, getCustomers } from "@/helpers/api";
+import { formatDate } from "@/helpers/utils";
 import { useToast } from "@/hooks/useToast";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import moment from "moment";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Customers() {
   const { setOpenDialog } = useDialogContext();
   const { toast } = useToast();
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const {
     data: customers,
@@ -45,6 +48,13 @@ export default function Customers() {
   } = useQuery({
     queryKey: ["customers"],
     queryFn: getCustomers,
+  });
+
+  // Filter customers based on search term
+  const filteredCustomers = customers?.filter((customer) => {
+    const fullName =
+      `${customer.first_name} ${customer.last_name}`.toLowerCase();
+    return fullName.includes(searchTerm.toLowerCase());
   });
 
   const { mutate: deleteCustomer } = useMutation({
@@ -147,7 +157,12 @@ export default function Customers() {
           <div className="mb-4 flex items-center gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search customers..." className="pl-8" />
+              <Input
+                placeholder="Search by customer name"
+                className="pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
           </div>
           <Table>
@@ -156,13 +171,13 @@ export default function Customers() {
                 <TableHead>First Name</TableHead>
                 <TableHead>Last Name</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Phone Number</TableHead>
                 <TableHead>Created at</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {customers.map((customer) => (
+              {filteredCustomers?.map((customer) => (
                 <TableRow key={customer.id}>
                   <TableCell>
                     <div className="font-medium">{customer.first_name}</div>
@@ -172,11 +187,9 @@ export default function Customers() {
                   </TableCell>
                   <TableCell>{customer.email}</TableCell>
                   <TableCell>
-                    <Badge variant="default">Active</Badge>
+                    <div className="font-medium">{customer.phone_number}</div>
                   </TableCell>
-                  <TableCell>
-                    {moment(customer.created_at).format("DD MMM YYYY")}
-                  </TableCell>
+                  <TableCell>{formatDate(customer.created_at)}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -185,7 +198,13 @@ export default function Customers() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View details</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            router.push(`/customers/${customer.id}`)
+                          }
+                        >
+                          View details
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
                             localStorage.setItem(

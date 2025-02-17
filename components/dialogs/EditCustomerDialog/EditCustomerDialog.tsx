@@ -77,6 +77,7 @@ export default function EditCustomerDialog({
       first_name: "",
       last_name: "",
       email: "",
+      phone_number: "",
     },
   });
 
@@ -93,6 +94,7 @@ export default function EditCustomerDialog({
         first_name: customer.first_name,
         last_name: customer.last_name,
         email: customer.email,
+        phone_number: customer.phone_number || "",
       });
     }
   }, [customer, reset]);
@@ -172,6 +174,25 @@ export default function EditCustomerDialog({
                         {...field}
                         disabled={isPending}
                         placeholder="acme@example.com"
+                        className="col-span-3"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="phone_number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="+1 (555) 123-4567"
                         className="col-span-3"
                       />
                     </FormControl>

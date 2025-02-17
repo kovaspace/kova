@@ -39,6 +39,7 @@ export default function AddCustomerDialog({ onClose }: AddCustomerDialogProps) {
       first_name: "",
       last_name: "",
       email: "",
+      phone_number: "",
     },
   });
 
@@ -139,6 +140,25 @@ export default function AddCustomerDialog({ onClose }: AddCustomerDialogProps) {
                         {...field}
                         disabled={isPending}
                         placeholder="acme@example.com"
+                        className="col-span-3"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="phone_number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="+1 (555) 123-4567"
                         className="col-span-3"
                       />
                     </FormControl>
