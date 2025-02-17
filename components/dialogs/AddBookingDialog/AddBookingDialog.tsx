@@ -43,7 +43,7 @@ import { createBooking, getBookings } from "@/helpers/api/bookings";
 import { getCustomers } from "@/helpers/api/customers";
 import { getFacilities } from "@/helpers/api/facilities";
 import { getSpacesByFacilityId } from "@/helpers/api/spaces";
-import { cn } from "@/lib/utils";
+import { cn } from "@/helpers/utils";
 import { BookingFormData, BookingSchema } from "@/types/bookings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";

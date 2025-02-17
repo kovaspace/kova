@@ -22,7 +22,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/helpers/utils";
 import { ScrollArea } from "./scroll-area";
 
 type PhoneInputProps = Omit<

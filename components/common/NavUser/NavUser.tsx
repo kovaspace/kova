@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  BadgeCheck,
   Bell,
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  Settings,
   Sparkles,
 } from "lucide-react";
 
@@ -98,9 +98,9 @@ export default function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
+                <Settings />
+                Settings
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />

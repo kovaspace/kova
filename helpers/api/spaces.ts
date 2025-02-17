@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase/client";
+import supabase from "@/helpers/supabase/client";
 import { SpaceFormData } from "@/types/spaces";
 
 async function getSpace(id: string) {

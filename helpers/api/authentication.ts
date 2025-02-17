@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase/client";
+import supabase from "@/helpers/supabase/client";
 
 async function signInWithPassword(email: string, password: string) {
   try {

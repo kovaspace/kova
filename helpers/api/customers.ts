@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase/client";
+import supabase from "@/helpers/supabase/client";
 import { CustomerFormData } from "@/types/customers";
 
 async function getCustomer(id: string) {

@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase/client";
+import supabase from "@/helpers/supabase/client";
 import { BookingFormData } from "@/types/bookings";
 import moment from "moment";
 
