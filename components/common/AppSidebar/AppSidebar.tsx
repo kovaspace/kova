@@ -29,7 +29,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCurrentUser } from "@/helpers/api/users";
+import { getCurrentUser } from "@/helpers/api";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

@@ -38,7 +38,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useDialogContext } from "@/context/dialogContext";
-import { deleteBooking, getBookings } from "@/helpers/api/bookings";
+import { deleteBooking, getBookings } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
 
 export default function Bookings() {

@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { getFacilities } from "@/helpers/api/facilities";
-import { editSpace, getSpace, getSpaces } from "@/helpers/api/spaces";
+import { getFacilities } from "@/helpers/api";
+import { editSpace, getSpace, getSpaces } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
 import { SpaceFormData, spaceSchema } from "@/types/spaces";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
-import { signInWithPassword } from "@/helpers/api/authentication";
+import { signInWithPassword } from "@/helpers/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 

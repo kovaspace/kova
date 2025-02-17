@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createCustomer, getCustomers } from "@/helpers/api/customers";
+import { createCustomer, getCustomers } from "@/helpers/api";
 import { CustomerFormData, CustomerSchema } from "@/types/customers";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";

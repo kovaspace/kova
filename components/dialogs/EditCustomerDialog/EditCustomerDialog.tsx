@@ -19,11 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  editCustomer,
-  getCustomer,
-  getCustomers,
-} from "@/helpers/api/customers";
+import { editCustomer, getCustomer, getCustomers } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
 import { CustomerFormData, CustomerSchema } from "@/types/customers";
 import { zodResolver } from "@hookform/resolvers/zod";

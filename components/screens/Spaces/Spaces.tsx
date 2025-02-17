@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { getSpaces } from "@/helpers/api/spaces";
+import { getSpaces } from "@/helpers/api";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import Image from "next/image";

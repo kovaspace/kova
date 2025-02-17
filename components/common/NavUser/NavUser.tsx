@@ -25,7 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { logout } from "@/helpers/api/authentication";
+import { logout } from "@/helpers/api";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 

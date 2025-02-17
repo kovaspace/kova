@@ -1,4 +1,4 @@
-import supabase from "@/helpers/supabase/client";
+import { supabase } from "@/helpers/supabase";
 import { FacilityFormData } from "@/types/facilities";
 
 async function getFacility(id: string) {

@@ -21,11 +21,7 @@ import LocationSelector from "@/components/ui/location-input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  editFacility,
-  getFacilities,
-  getFacility,
-} from "@/helpers/api/facilities";
+import { editFacility, getFacilities, getFacility } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
 import { facilitiesSchema, FacilityFormData } from "@/types/facilities";
 import { zodResolver } from "@hookform/resolvers/zod";

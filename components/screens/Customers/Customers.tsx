@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/table";
 
 import { useDialogContext } from "@/context/dialogContext";
-import { deletCustomer, getCustomers } from "@/helpers/api/customers";
+import { deletCustomer, getCustomers } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import moment from "moment";
