@@ -14,6 +14,7 @@ export async function updateSession(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.some((route) =>
     currentPath.includes(route)
   );
+  const subdomain = request.headers.get("host")?.split(".")[0] || "";
 
   let supabaseResponse = NextResponse.next({
     request,
@@ -60,6 +61,40 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
+  }
+
+  if (subdomain === "app") {
+    setSubdomainHeader();
+    return supabaseResponse;
+  }
+
+  const { data: validSubdomain } = await supabase
+    .from("accounts")
+    .select("subdomain")
+    .eq("subdomain", subdomain)
+    .single();
+
+  if (!validSubdomain) {
+    const url = new URL("https://kovaspace.com");
+    return NextResponse.redirect(url);
+  } else {
+    const currentPath = request.nextUrl.pathname;
+
+    setSubdomainHeader();
+
+    if (currentPath === "/") {
+      const url = new URL(`http://${subdomain}.localhost:3000/book`);
+      return NextResponse.redirect(url);
+    }
+
+    return supabaseResponse;
+  }
+
+  // Clone the URL and add subdomain to request headers
+  function setSubdomainHeader() {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-subdomain", subdomain);
+    supabaseResponse.headers.set("x-subdomain", subdomain);
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're

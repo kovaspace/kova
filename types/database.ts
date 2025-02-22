@@ -40,18 +40,24 @@ export type Database = {
           email: string;
           id: string;
           name: string;
+          plan: Database["public"]["Enums"]["account_plan"];
+          subdomain: string | null;
         };
         Insert: {
           created_at?: string;
           email: string;
           id?: string;
           name: string;
+          plan?: Database["public"]["Enums"]["account_plan"];
+          subdomain?: string | null;
         };
         Update: {
           created_at?: string;
           email?: string;
           id?: string;
           name?: string;
+          plan?: Database["public"]["Enums"]["account_plan"];
+          subdomain?: string | null;
         };
         Relationships: [];
       };
@@ -253,6 +259,7 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
+      account_plan: "free" | "pro" | "enterprise";
       account_status: "active" | "email_verification" | "inactive" | "disabled";
       facilities_status: "active" | "inactive" | "archived";
       spaces_status: "active" | "inactive" | "archived";

@@ -4,7 +4,7 @@ import { SidebarInset } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { ReactNode } from "react";
 
-export default function Template({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <AppSidebar />
