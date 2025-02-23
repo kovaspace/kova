@@ -55,6 +55,7 @@ import { useToast } from "@/hooks/useToast";
 
 interface AddBookingDialogProps {
   onClose: () => void;
+  accountId: string;
 }
 
 export const availableTimes = [
@@ -68,7 +69,7 @@ export const availableTimes = [
   { id: 8, start: "04:00 PM", end: "05:00 PM" },
 ];
 
-const AddBookingDialog = ({ onClose }: AddBookingDialogProps) => {
+const AddBookingDialog = ({ onClose, accountId }: AddBookingDialogProps) => {
   const { toast } = useToast();
   const [selectedFacility, setSelectedFacility] = useState<string | null>(null);
   const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
@@ -97,7 +98,7 @@ const AddBookingDialog = ({ onClose }: AddBookingDialogProps) => {
 
   const { data: facilities } = useQuery({
     queryKey: ["facilities"],
-    queryFn: getFacilities,
+    queryFn: () => getFacilities(accountId),
   });
 
   const { data: spaces } = useQuery({

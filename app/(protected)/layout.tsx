@@ -15,7 +15,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
       <SidebarInset>
         {children}
         <Toaster />
-        <DialogWrapper />
+        <DialogWrapper accountId={accountId} />
       </SidebarInset>
     </>
   );
