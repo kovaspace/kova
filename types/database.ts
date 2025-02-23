@@ -39,6 +39,7 @@ export type Database = {
           created_at: string;
           email: string;
           id: string;
+          logo: string | null;
           name: string;
           plan: Database["public"]["Enums"]["account_plan"];
           slug: string | null;
@@ -47,6 +48,7 @@ export type Database = {
           created_at?: string;
           email: string;
           id?: string;
+          logo?: string | null;
           name: string;
           plan?: Database["public"]["Enums"]["account_plan"];
           slug?: string | null;
@@ -55,6 +57,7 @@ export type Database = {
           created_at?: string;
           email?: string;
           id?: string;
+          logo?: string | null;
           name?: string;
           plan?: Database["public"]["Enums"]["account_plan"];
           slug?: string | null;

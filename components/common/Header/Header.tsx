@@ -1,6 +1,5 @@
 "use client";
 
-import noctaLogo from "@/assets/images/nocta_logo.png";
 import { getAccount, getFacilityBySlug } from "@/helpers/api";
 import { useQuery } from "@tanstack/react-query";
 import { Clock, MapPin, Phone } from "lucide-react";
@@ -44,9 +43,9 @@ export default function Header({ accountId }: HeaderProps) {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center gap-6">
             <div>
-              {noctaLogo ? (
+              {account.logo ? (
                 <Logo
-                  src={noctaLogo}
+                  src={account.logo}
                   alt={`${account.name} Logo`}
                   width={180}
                   className="mb-2"

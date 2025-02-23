@@ -1,8 +1,8 @@
-import Image, { StaticImageData } from "next/image";
 import { cn } from "@/helpers/utils";
+import Image from "next/image";
 
 interface LogoProps {
-  src: StaticImageData;
+  src: string;
   alt: string;
   className?: string;
   width?: number;
