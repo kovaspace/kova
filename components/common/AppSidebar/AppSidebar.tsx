@@ -29,7 +29,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCurrentUser } from "@/helpers/api";
+import { getAccount, getCurrentUser } from "@/helpers/api";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -176,8 +176,9 @@ const data = {
 };
 
 export default function AppSidebar({
+  accountId,
   ...props
-}: React.ComponentProps<typeof Sidebar>) {
+}: React.ComponentProps<typeof Sidebar> & { accountId: string }) {
   const router = useRouter();
 
   const { data: currentUser, isLoading } = useQuery({
@@ -185,7 +186,12 @@ export default function AppSidebar({
     queryFn: getCurrentUser,
   });
 
-  if (isLoading || !currentUser) {
+  const { data: currentAccount, isLoading: isAccountLoading } = useQuery({
+    queryKey: ["currentAccount"],
+    queryFn: () => getAccount(accountId),
+  });
+
+  if (isLoading || !currentUser || isAccountLoading || !currentAccount) {
     return (
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
@@ -210,9 +216,11 @@ export default function AppSidebar({
             </SidebarMenuButton>
           </SidebarMenu>
         </SidebarHeader>
+
         <SidebarContent>
           <NavProjects projects={data.projects} />
         </SidebarContent>
+
         <SidebarFooter>
           <div className="flex items-center space-x-4">
             <Skeleton className="h-12 w-12 rounded-full" />
@@ -256,7 +264,7 @@ export default function AppSidebar({
             first_name,
             last_name,
             company_name: accounts?.name ?? "Company name not found",
-            avatar: "https://github.com/shadcn.png",
+            avatar: currentAccount?.logo ?? "",
           }}
         />
       </SidebarFooter>
