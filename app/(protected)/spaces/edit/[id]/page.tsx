@@ -1,4 +1,4 @@
-import PageContainer from "@/components/common/PageContainer";
+import AppContainer from "@/components/common/AppContainer";
 import EditSpace from "@/components/screens/protected/EditSpace";
 import {
   Breadcrumb,
@@ -51,9 +51,9 @@ export default async function page() {
         </div>
       </header>
 
-      <PageContainer>
+      <AppContainer>
         <EditSpace accountId={accountId} />
-      </PageContainer>
+      </AppContainer>
     </>
   );
 }

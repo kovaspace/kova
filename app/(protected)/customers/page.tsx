@@ -1,4 +1,4 @@
-import PageContainer from "@/components/common/PageContainer";
+import AppContainer from "@/components/common/AppContainer";
 import Customers from "@/components/screens/protected/Customers";
 import {
   Breadcrumb,
@@ -41,9 +41,9 @@ export default function Page() {
         </div>
       </header>
 
-      <PageContainer>
+      <AppContainer>
         <Customers />
-      </PageContainer>
+      </AppContainer>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import PageContainer from "@/components/common/PageContainer";
+import AppContainer from "@/components/common/AppContainer";
 import Spaces from "@/components/screens/protected/Spaces";
 import {
   Breadcrumb,
@@ -45,9 +45,9 @@ export default async function page() {
         </div>
       </header>
 
-      <PageContainer>
+      <AppContainer>
         <Spaces accountId={accountId} />
-      </PageContainer>
+      </AppContainer>
     </>
   );
 }

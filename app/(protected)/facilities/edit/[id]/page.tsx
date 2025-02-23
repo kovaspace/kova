@@ -1,5 +1,5 @@
 import EditFacility from "@/components/screens/protected/EditFacility";
-import PageContainer from "@/components/common/PageContainer";
+import AppContainer from "@/components/common/AppContainer";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -51,9 +51,9 @@ export default async function Page({ accountId }: EditFacilityPageProps) {
         </div>
       </header>
 
-      <PageContainer>
+      <AppContainer>
         <EditFacility accountId={accountId} />
-      </PageContainer>
+      </AppContainer>
     </>
   );
 }

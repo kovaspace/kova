@@ -1,4 +1,4 @@
-import PageContainer from "@/components/common/PageContainer";
+import AppContainer from "@/components/common/AppContainer";
 import Facilities from "@/components/screens/protected/Facilities";
 import {
   Breadcrumb,
@@ -45,9 +45,9 @@ export default async function Page() {
         </div>
       </header>
 
-      <PageContainer>
+      <AppContainer>
         <Facilities accountId={accountId} />
-      </PageContainer>
+      </AppContainer>
     </>
   );
 }
