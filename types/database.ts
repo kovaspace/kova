@@ -41,7 +41,7 @@ export type Database = {
           id: string;
           name: string;
           plan: Database["public"]["Enums"]["account_plan"];
-          subdomain: string | null;
+          slug: string | null;
         };
         Insert: {
           created_at?: string;
@@ -49,7 +49,7 @@ export type Database = {
           id?: string;
           name: string;
           plan?: Database["public"]["Enums"]["account_plan"];
-          subdomain?: string | null;
+          slug?: string | null;
         };
         Update: {
           created_at?: string;
@@ -57,7 +57,7 @@ export type Database = {
           id?: string;
           name?: string;
           plan?: Database["public"]["Enums"]["account_plan"];
-          subdomain?: string | null;
+          slug?: string | null;
         };
         Relationships: [];
       };
@@ -135,6 +135,7 @@ export type Database = {
       };
       facilities: {
         Row: {
+          account_id: string;
           address: string;
           city: string;
           country: string;
@@ -144,10 +145,12 @@ export type Database = {
           id: string;
           name: string;
           phone_number: string;
+          slug: string | null;
           state_province: string;
           status: Database["public"]["Enums"]["spaces_status"];
         };
         Insert: {
+          account_id: string;
           address: string;
           city: string;
           country: string;
@@ -157,10 +160,12 @@ export type Database = {
           id?: string;
           name: string;
           phone_number: string;
+          slug?: string | null;
           state_province: string;
           status?: Database["public"]["Enums"]["spaces_status"];
         };
         Update: {
+          account_id?: string;
           address?: string;
           city?: string;
           country?: string;
@@ -170,10 +175,19 @@ export type Database = {
           id?: string;
           name?: string;
           phone_number?: string;
+          slug?: string | null;
           state_province?: string;
           status?: Database["public"]["Enums"]["spaces_status"];
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "facilities_account_id_fkey";
+            columns: ["account_id"];
+            isOneToOne: false;
+            referencedRelation: "accounts";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       spaces: {
         Row: {

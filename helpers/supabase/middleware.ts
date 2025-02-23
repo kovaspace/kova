@@ -64,27 +64,30 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (subdomain === "app") {
-    setSubdomainHeader();
-    return supabaseResponse;
-  }
-
-  const { data: validSlug } = await supabase
+  const { data: account } = await supabase
     .from("accounts")
-    .select("slug")
+    .select("id, slug")
     .eq("slug", slug)
     .single();
 
-  if (!validSlug) {
-    const url = new URL("https://kovaspace.com");
-    return NextResponse.redirect(url);
-  } else {
+  const { data: userAccount } = await supabase
+    .from("users")
+    .select("id")
+    .eq("id", user?.id)
+    .single();
+
+  if (subdomain === "app") {
+    setSubdomainHeader(userAccount?.id);
+    return supabaseResponse;
+  }
+
+  if (account?.slug) {
     const currentPath = request.nextUrl.pathname;
 
-    setSubdomainHeader();
+    setSubdomainHeader(account.id);
 
     if (currentPath === "/") {
-      const url = new URL(`http://book.localhost:3000/${validSlug}`);
+      const url = new URL(`http://book.localhost:3000/${account.slug}`);
       return NextResponse.redirect(url);
     }
 
@@ -92,10 +95,8 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Clone the URL and add subdomain to request headers
-  function setSubdomainHeader() {
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-subdomain", subdomain);
-    supabaseResponse.headers.set("x-subdomain", subdomain);
+  function setSubdomainHeader(accountId: string) {
+    supabaseResponse.headers.set("x-account-id", accountId);
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're

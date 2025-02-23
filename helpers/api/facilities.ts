@@ -17,12 +17,14 @@ async function getFacility(id: string) {
   }
 }
 
-async function getFacilities() {
+async function getFacilities(accountId: string) {
   try {
-    const { data, error } = await supabase
+    const query = supabase
       .from("facilities")
       .select("*, spaces (*)")
-      .select();
+      .eq("account_id", accountId);
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -32,7 +34,23 @@ async function getFacilities() {
   }
 }
 
-async function createFacility(body: FacilityFormData) {
+async function getFacilityBySlug(slug: string) {
+  try {
+    const { data, error } = await supabase
+      .from("facilities")
+      .select("*, spaces (*)")
+      .eq("slug", slug)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function createFacility(body: FacilityFormData, accountId: string) {
   try {
     delete body.images;
 
@@ -43,6 +61,7 @@ async function createFacility(body: FacilityFormData) {
           ...body,
           country: body.country[0],
           state_province: body.country[1] ?? "",
+          account_id: accountId,
         },
       ])
       .select()
@@ -99,7 +118,8 @@ async function editFacility(id: string, body: FacilityFormData) {
 export {
   createFacility,
   deletFacility,
-  getFacility,
-  getFacilities,
   editFacility,
+  getFacilities,
+  getFacility,
+  getFacilityBySlug,
 };

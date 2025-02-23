@@ -5,7 +5,7 @@ async function getSpace(id: string) {
   try {
     const spacesWithFacilities = supabase
       .from("spaces")
-      .select("*, facilities (name)");
+      .select("*, facilities (*)");
 
     const { data, error } = await spacesWithFacilities.eq("id", id).single();
 
@@ -17,11 +17,12 @@ async function getSpace(id: string) {
   }
 }
 
-async function getSpaces() {
+async function getSpaces(accountId: string) {
   try {
     const spacesWithFacilities = supabase
       .from("spaces")
-      .select("*, facilities (name)");
+      .select("*, facilities (name, account_id)")
+      .eq("facilities.account_id", accountId);
 
     const { data, error } = await spacesWithFacilities;
 
