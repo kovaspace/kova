@@ -15,6 +15,7 @@ export async function updateSession(request: NextRequest) {
     currentPath.includes(route)
   );
   const subdomain = request.headers.get("host")?.split(".")[0] || "";
+  const slug = request.nextUrl.pathname.split("/")[1];
 
   let supabaseResponse = NextResponse.next({
     request,
@@ -68,13 +69,13 @@ export async function updateSession(request: NextRequest) {
     return supabaseResponse;
   }
 
-  const { data: validSubdomain } = await supabase
+  const { data: validSlug } = await supabase
     .from("accounts")
-    .select("subdomain")
-    .eq("subdomain", subdomain)
+    .select("slug")
+    .eq("slug", slug)
     .single();
 
-  if (!validSubdomain) {
+  if (!validSlug) {
     const url = new URL("https://kovaspace.com");
     return NextResponse.redirect(url);
   } else {
@@ -83,7 +84,7 @@ export async function updateSession(request: NextRequest) {
     setSubdomainHeader();
 
     if (currentPath === "/") {
-      const url = new URL(`http://${subdomain}.localhost:3000/book`);
+      const url = new URL(`http://book.localhost:3000/${validSlug}`);
       return NextResponse.redirect(url);
     }
 
