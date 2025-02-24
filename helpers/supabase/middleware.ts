@@ -64,9 +64,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  console.log(subdomain);
-  console.log(slug);
-
   if (subdomain === "app") {
     const { data: userAccount } = await supabase
       .from("users")
