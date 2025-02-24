@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import * as React from "react";
 
-import sidebarLogo from "@/assets/images/sidebar_logo.png";
 import NavProjects from "@/components/common/NavProjects";
 import NavUser from "@/components/common/NavUser";
 import {
@@ -197,21 +196,12 @@ export default function AppSidebar({
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuButton size="lg">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <Image
-                  src={sidebarLogo}
-                  alt="Kova Logo"
-                  height={16}
-                  width={16}
-                />
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-muted">
+                <Skeleton className="h-8 w-8 rounded-lg" />
               </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                  <Skeleton className="h-3 w-[170px]" />
-                </span>
-                <span className="truncate text-xs">
-                  <Skeleton className="h-3 w-[100px]" />
-                </span>
+              <div className="grid flex-1 text-left text-sm leading-tight gap-1">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-[18px] w-16" />
               </div>
             </SidebarMenuButton>
           </SidebarMenu>
@@ -222,11 +212,11 @@ export default function AppSidebar({
         </SidebarContent>
 
         <SidebarFooter>
-          <div className="flex items-center space-x-4">
-            <Skeleton className="h-12 w-12 rounded-full" />
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-[170px]" />
-              <Skeleton className="h-4 w-[110px]" />
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <div className="grid gap-1">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-3 w-20" />
             </div>
           </div>
         </SidebarFooter>
@@ -245,12 +235,20 @@ export default function AppSidebar({
             size="lg"
             onClick={() => router.push("/dashboard")}
           >
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <Image src={sidebarLogo} alt="Kova Logo" height={16} width={16} />
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground overflow-hidden">
+              <Image
+                src={currentAccount?.logo || ""}
+                alt="Kova Logo"
+                className="h-8 w-8 rounded-lg object-cover"
+                width={32}
+                height={32}
+              />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">Kova</span>
-              <span className="truncate text-xs">Enterprise</span>
+              <span className="truncate font-semibold">{accounts?.name}</span>
+              <span className="truncate text-xs capitalize">
+                {accounts?.plan} plan
+              </span>
             </div>
           </SidebarMenuButton>
         </SidebarMenu>
@@ -263,8 +261,7 @@ export default function AppSidebar({
           user={{
             first_name,
             last_name,
-            company_name: accounts?.name ?? "Company name not found",
-            avatar: currentAccount?.logo ?? "",
+            email: accounts?.email ?? "",
           }}
         />
       </SidebarFooter>

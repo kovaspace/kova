@@ -237,8 +237,10 @@ export type Database = {
           email: string;
           first_name: string;
           id: string;
+          invited_at: string;
           last_name: string;
-          type: Database["public"]["Enums"]["user_type"];
+          role: Database["public"]["Enums"]["user_type"];
+          status: Database["public"]["Enums"]["user_status"];
         };
         Insert: {
           account_id: string;
@@ -246,8 +248,10 @@ export type Database = {
           email: string;
           first_name: string;
           id: string;
+          invited_at?: string;
           last_name: string;
-          type: Database["public"]["Enums"]["user_type"];
+          role: Database["public"]["Enums"]["user_type"];
+          status?: Database["public"]["Enums"]["user_status"];
         };
         Update: {
           account_id?: string;
@@ -255,8 +259,10 @@ export type Database = {
           email?: string;
           first_name?: string;
           id?: string;
+          invited_at?: string;
           last_name?: string;
-          type?: Database["public"]["Enums"]["user_type"];
+          role?: Database["public"]["Enums"]["user_type"];
+          status?: Database["public"]["Enums"]["user_status"];
         };
         Relationships: [
           {

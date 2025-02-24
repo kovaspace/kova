@@ -1,5 +1,5 @@
+import { TeamSettings } from "@/components/screens/protected/Settings/TeamSettings";
 import AppContainer from "@/components/common/AppContainer";
-import Settings from "@/components/screens/protected/Settings";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,14 +8,18 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { headers } from "next/headers";
 
-export default async function page() {
+export default async function TeamSettingsPage() {
   const headersList = await headers();
-  const accountId = headersList.get("x-account-id") as string;
+  const accountId = headersList.get("x-account-id");
+
+  if (!accountId) {
+    throw new Error("No account ID found");
+  }
 
   return (
     <>
@@ -25,14 +29,20 @@ export default async function page() {
           <Separator orientation="vertical" className="mr-2 h-4" />
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
+              <BreadcrumbItem>
                 <BreadcrumbLink asChild>
                   <Link href="/dashboard">Dashboard</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Settings</BreadcrumbPage>
+                <BreadcrumbLink asChild>
+                  <Link href="/settings">Settings</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Team Members</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -40,7 +50,7 @@ export default async function page() {
       </header>
 
       <AppContainer>
-        <Settings accountId={accountId} />
+        <TeamSettings accountId={accountId} />
       </AppContainer>
     </>
   );
