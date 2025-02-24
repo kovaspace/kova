@@ -64,32 +64,32 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  const { data: account } = await supabase
-    .from("accounts")
-    .select("id, slug")
-    .eq("slug", slug)
-    .single();
-
-  const { data: userAccount } = await supabase
-    .from("users")
-    .select("id")
-    .eq("id", user?.id)
-    .single();
+  console.log(subdomain);
+  console.log(slug);
 
   if (subdomain === "app") {
+    const { data: userAccount } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", user?.id)
+      .single();
+
     setSubdomainHeader(userAccount?.id);
     return supabaseResponse;
   }
 
-  if (account?.slug) {
-    const currentPath = request.nextUrl.pathname;
+  if (subdomain === "book") {
+    const { data: account } = await supabase
+      .from("accounts")
+      .select("id, slug")
+      .eq("slug", slug)
+      .single();
+
+    if (!account) {
+      return NextResponse.redirect("https://kovaspace.com");
+    }
 
     setSubdomainHeader(account.id);
-
-    if (currentPath === "/") {
-      const url = new URL(`http://book.localhost:3000/${account.slug}`);
-      return NextResponse.redirect(url);
-    }
 
     return supabaseResponse;
   }

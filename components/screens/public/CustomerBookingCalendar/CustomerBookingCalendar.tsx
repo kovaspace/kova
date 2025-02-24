@@ -1,5 +1,6 @@
 "use client";
 
+import Header from "@/components/common/Header/Header";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -68,7 +69,13 @@ const UNAVAILABLE_SLOTS = [
   { date: addDays(new Date(), 2), time: "3:00 PM" },
 ];
 
-export default function CustomerBookingCalendar() {
+interface CustomerBookingCalendarProps {
+  accountId: string;
+}
+
+export default function CustomerBookingCalendar({
+  accountId,
+}: CustomerBookingCalendarProps) {
   const params = useParams();
   const spaceId = params["space-id"] as string;
 
@@ -108,6 +115,7 @@ export default function CustomerBookingCalendar() {
 
   return (
     <>
+      <Header accountId={accountId} />
       <div className="max-w-7xl mx-auto">
         {/* Image Gallery */}
         <div className="relative h-[500px] grid grid-cols-4 gap-2 mb-8 rounded-xl overflow-hidden">
