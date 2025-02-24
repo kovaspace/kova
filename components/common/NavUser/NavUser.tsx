@@ -107,7 +107,9 @@ export default function NavUser({
                 <Settings />
                 Settings
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.push("/settings/billing")}
+              >
                 <CreditCard />
                 Billing
               </DropdownMenuItem>

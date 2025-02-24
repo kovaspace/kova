@@ -2,14 +2,13 @@
 
 import { Card } from "@/components/ui/card";
 import {
-  Bell,
   Building2,
   ChevronRight,
   CreditCard,
   Key,
   Shield,
-  UserCog,
   Users,
+  Wallet,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -34,12 +33,6 @@ const SETTINGS_SECTIONS = [
         description: "Manage users and their access permissions",
         href: "/settings/users",
       },
-      {
-        icon: UserCog,
-        name: "Roles & Permissions",
-        description: "Configure role-based access control",
-        href: "/settings/roles",
-      },
     ],
   },
   {
@@ -53,10 +46,10 @@ const SETTINGS_SECTIONS = [
         href: "/settings/billing",
       },
       {
-        icon: Bell,
-        name: "Usage & Limits",
-        description: "Monitor your usage and manage limits",
-        href: "/settings/usage",
+        icon: Wallet,
+        name: "Payout Settings",
+        description: "Manage your Stripe payout account and banking details",
+        href: "/settings/payouts",
       },
     ],
   },
