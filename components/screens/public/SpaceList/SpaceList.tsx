@@ -1,13 +1,15 @@
 "use client";
 
-import Header from "@/components/common/Header/Header";
+import Loading from "@/components/common/Loading";
+import Error from "@/components/common/Error";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { getAccount, getFacilityBySlug } from "@/helpers/api";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function SpaceList({ accountId }: { accountId: string }) {
   const params = useParams();
@@ -31,91 +33,99 @@ export default function SpaceList({ accountId }: { accountId: string }) {
     queryFn: () => getFacilityBySlug(facilitySlug),
   });
 
-  if (isAccountLoading || isFacilityLoading) return <div>Loading...</div>;
-  if (accountError || facilityError) return <div>Error...</div>;
+  if (isAccountLoading || isFacilityLoading) return <Loading />;
+  if (accountError || facilityError) return <Error />;
   if (!account || !facility) return <div>No data</div>;
 
   return (
-    <>
-      <Header accountId={accountId} />
-      <div className="min-h-screen bg-gray-50/50">
-        {/* Spaces Grid */}
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {facility.spaces.map((space) => (
-              <Link
-                key={space.id}
-                href={`/${account.slug}/${facility.slug}/${space.id}`}
-                className="block group"
-              >
-                <Card className="h-full hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <div className="relative aspect-[16/10]">
-                    <Image
-                      src="https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=2669&auto=format&fit=crop"
-                      alt={space.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <h2 className="text-xl font-semibold">{space.name}</h2>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Badge className="bg-primary/90 hover:bg-primary text-white">
-                          From $45/hr
-                        </Badge>
-                        <Badge
-                          variant="outline"
-                          className="text-white border-white/50"
-                        >
-                          Basketball
-                        </Badge>
-                      </div>
-                    </div>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <div className="border-b">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-12">
+            {/* Facility Image */}
+            <div className="h-32 w-32 relative rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+              <Image
+                src={account.logo || ""}
+                alt={facility.name}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h1 className="text-4xl font-bold mb-3">{facility.name}</h1>
+                <div className="flex items-center gap-4 text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="bg-gray-100">
+                      {facility.spaces.length} Spaces
+                    </Badge>
                   </div>
-                  <CardContent className="p-4">
-                    <p className="text-muted-foreground text-sm line-clamp-2">
-                      {space.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <Badge variant="secondary" className="text-xs">
-                        94ft × 50ft
-                      </Badge>
-                      <Badge variant="secondary" className="text-xs">
-                        Up to 12 players
-                      </Badge>
-                    </div>
-                    <div className="mt-4 pt-4 border-t flex flex-wrap gap-2">
-                      {[
-                        "Scoreboard",
-                        "Locker Rooms",
-                        "Water Fountains",
-                        "Ball Rental",
-                      ].map((amenity, index) => (
-                        <span
-                          key={index}
-                          className="text-xs text-muted-foreground flex items-center gap-1"
-                        >
-                          <svg
-                            className="w-4 h-4 text-primary"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                          </svg>
-                          {amenity}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm">
+                      {facility.address || "No address available"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </>
+
+      {/* Spaces Grid */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {facility.spaces.map((space) => (
+            <Link
+              key={space.id}
+              href={`/${account.slug}/${facility.slug}/${space.id}`}
+              className="block cursor-pointer"
+            >
+              <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+                <div className="aspect-video relative mb-4 rounded-lg overflow-hidden">
+                  <Image
+                    src="https://images.unsplash.com/photo-1504450758481-7338eba7524a"
+                    alt={space.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div>
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-xl font-semibold">{space.name}</h3>
+                    <Badge variant="secondary" className="bg-gray-100">
+                      From $45/hr
+                    </Badge>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <Badge variant="secondary" className="text-xs">
+                      94ft × 50ft
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      Up to 12 players
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      Basketball
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm font-medium text-green-600">
+                      Next available:{" "}
+                      {new Date().toLocaleDateString("en-US", {
+                        weekday: "long",
+                      })}
+                    </p>
+                    <Button>Book now</Button>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
