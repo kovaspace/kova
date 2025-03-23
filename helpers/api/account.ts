@@ -1,7 +1,7 @@
 import { supabase } from "@/helpers/supabase";
-import { AccountFormData } from "@/types/account";
-
-async function getAccount(accountId: string) {
+import { AccountFormData } from "@/schemas/account";
+import { Subscription } from "@/types/subscriptions";
+export async function getAccount(accountId: string) {
   try {
     const { data, error } = await supabase
       .from("accounts")
@@ -17,12 +17,13 @@ async function getAccount(accountId: string) {
   }
 }
 
-async function updateAccount(accountId: string, data: AccountFormData) {
+export async function updateAccount(accountId: string, data: AccountFormData) {
   try {
     const { data: updatedData, error } = await supabase
       .from("accounts")
       .update(data)
       .eq("id", accountId)
+      .select()
       .single();
 
     if (error) throw error;
@@ -33,4 +34,20 @@ async function updateAccount(accountId: string, data: AccountFormData) {
   }
 }
 
-export { getAccount, updateAccount };
+export async function getAccountSubscription(
+  accountId: string
+): Promise<Subscription> {
+  try {
+    const { data, error } = await supabase
+      .from("accounts")
+      .select("subscriptions (*)")
+      .eq("id", accountId)
+      .single();
+
+    if (error || !data.subscriptions) throw error;
+
+    return { ...data.subscriptions };
+  } catch (error) {
+    throw error;
+  }
+}

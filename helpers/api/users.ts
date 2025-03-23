@@ -56,7 +56,6 @@ async function getPendingInvites(accountId: string) {
 
 async function inviteUserByEmail(email: string, role: string) {
   try {
-    console.log(role);
     const { data, error } = await supabase.auth.admin.inviteUserByEmail(email);
 
     if (error) throw error;

@@ -44,7 +44,7 @@ import { getCustomers } from "@/helpers/api";
 import { getFacilities } from "@/helpers/api";
 import { getSpacesByFacilityId } from "@/helpers/api";
 import { cn } from "@/helpers/utils";
-import { BookingFormData, BookingSchema } from "@/types/bookings";
+import { BookingFormData, BookingSchema } from "@/schemas/bookings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";

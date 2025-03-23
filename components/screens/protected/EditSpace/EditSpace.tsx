@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { getFacilities } from "@/helpers/api";
 import { editSpace, getSpace, getSpaces } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
-import { SpaceFormData, spaceSchema } from "@/types/spaces";
+import { SpaceFormData, spaceSchema } from "@/schemas/spaces";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";

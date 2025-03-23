@@ -10,7 +10,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/useToast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AccountFormData, accountSchema } from "@/types/account";
+import { AccountFormData, accountSchema } from "@/schemas/account";
 import {
   Form,
   FormControl,

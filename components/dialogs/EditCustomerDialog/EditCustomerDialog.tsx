@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { editCustomer, getCustomer, getCustomers } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
-import { CustomerFormData, CustomerSchema } from "@/types/customers";
+import { CustomerFormData, CustomerSchema } from "@/schemas/customers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";

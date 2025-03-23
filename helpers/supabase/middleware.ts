@@ -9,7 +9,9 @@ export async function updateSession(request: NextRequest) {
     "/settings",
     "/spaces",
     "/facilities",
+    "/api",
   ];
+  const stripeSignature = request.headers.get("stripe-signature");
   const currentPath = request.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.some((route) =>
     currentPath.includes(route)
@@ -17,7 +19,7 @@ export async function updateSession(request: NextRequest) {
   const subdomain = request.headers.get("host")?.split(".")[0] || "";
   const slug = request.nextUrl.pathname.split("/")[1];
 
-  let supabaseResponse = NextResponse.next({
+  let response = NextResponse.next({
     request,
   });
 
@@ -33,11 +35,11 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
+          response = NextResponse.next({
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            response.cookies.set(name, value, options)
           );
         },
       },
@@ -52,12 +54,26 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (stripeSignature && currentPath.includes("/api")) {
+    const { data: userAccount } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", user?.id)
+      .single();
+
+    setSubdomainHeader(userAccount?.id);
+
+    return response;
+  }
+
   if (!user && isProtectedRoute) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);
-  } else if (user && !isProtectedRoute) {
+  }
+
+  if (user && !isProtectedRoute) {
     // user is logged in but trying to access a public route, redirect to dashboard
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
@@ -72,7 +88,8 @@ export async function updateSession(request: NextRequest) {
       .single();
 
     setSubdomainHeader(userAccount?.id);
-    return supabaseResponse;
+
+    return response;
   }
 
   if (subdomain === "book") {
@@ -88,20 +105,20 @@ export async function updateSession(request: NextRequest) {
 
     setSubdomainHeader(account.id);
 
-    return supabaseResponse;
+    return response;
   }
 
   // Clone the URL and add subdomain to request headers
   function setSubdomainHeader(accountId: string) {
-    supabaseResponse.headers.set("x-account-id", accountId);
+    response.headers.set("x-account-id", accountId);
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
+  // IMPORTANT: You *must* return the response object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:
   // 1. Pass the request in it, like so:
   //    const myNewResponse = NextResponse.next({ request })
   // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
+  //    myNewResponse.cookies.setAll(response.cookies.getAll())
   // 3. Change the myNewResponse object to fit your needs, but avoid changing
   //    the cookies!
   // 4. Finally:
@@ -109,5 +126,5 @@ export async function updateSession(request: NextRequest) {
   // If this is not done, you may be causing the browser and server to go out
   // of sync and terminate the user's session prematurely!
 
-  return supabaseResponse;
+  return response;
 }

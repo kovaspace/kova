@@ -1,5 +1,5 @@
 import { supabase } from "@/helpers/supabase";
-import { SpaceFormData } from "@/types/spaces";
+import { SpaceFormData } from "@/schemas/spaces";
 
 async function getSpace(id: string) {
   try {

@@ -41,8 +41,10 @@ export type Database = {
           id: string;
           logo: string | null;
           name: string;
-          plan: Database["public"]["Enums"]["account_plan"];
           slug: string | null;
+          status: Database["public"]["Enums"]["account_status"] | null;
+          stripe_customer_id: string | null;
+          subscription_id: string | null;
         };
         Insert: {
           created_at?: string;
@@ -50,8 +52,10 @@ export type Database = {
           id?: string;
           logo?: string | null;
           name: string;
-          plan?: Database["public"]["Enums"]["account_plan"];
           slug?: string | null;
+          status?: Database["public"]["Enums"]["account_status"] | null;
+          stripe_customer_id?: string | null;
+          subscription_id?: string | null;
         };
         Update: {
           created_at?: string;
@@ -59,10 +63,20 @@ export type Database = {
           id?: string;
           logo?: string | null;
           name?: string;
-          plan?: Database["public"]["Enums"]["account_plan"];
           slug?: string | null;
+          status?: Database["public"]["Enums"]["account_status"] | null;
+          stripe_customer_id?: string | null;
+          subscription_id?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "accounts_subscription_id_fkey";
+            columns: ["subscription_id"];
+            isOneToOne: false;
+            referencedRelation: "subscriptions";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       bookings: {
         Row: {
@@ -230,6 +244,42 @@ export type Database = {
           }
         ];
       };
+      subscriptions: {
+        Row: {
+          canceled_at: string | null;
+          created_at: string;
+          current_period_end: string;
+          current_period_start: string;
+          id: string;
+          status: Database["public"]["Enums"]["subscription_status"] | null;
+          stripe_plan_id: string;
+          stripe_price_id: string | null;
+          stripe_subscription_id: string;
+        };
+        Insert: {
+          canceled_at?: string | null;
+          created_at?: string;
+          current_period_end: string;
+          current_period_start: string;
+          id?: string;
+          status?: Database["public"]["Enums"]["subscription_status"] | null;
+          stripe_plan_id: string;
+          stripe_price_id?: string | null;
+          stripe_subscription_id: string;
+        };
+        Update: {
+          canceled_at?: string | null;
+          created_at?: string;
+          current_period_end?: string;
+          current_period_start?: string;
+          id?: string;
+          status?: Database["public"]["Enums"]["subscription_status"] | null;
+          stripe_plan_id?: string;
+          stripe_price_id?: string | null;
+          stripe_subscription_id?: string;
+        };
+        Relationships: [];
+      };
       users: {
         Row: {
           account_id: string;
@@ -286,6 +336,15 @@ export type Database = {
       account_status: "active" | "email_verification" | "inactive" | "disabled";
       facilities_status: "active" | "inactive" | "archived";
       spaces_status: "active" | "inactive" | "archived";
+      subscription_status:
+        | "incomplete"
+        | "incomplete_expired"
+        | "trialing"
+        | "active"
+        | "past_due"
+        | "canceled"
+        | "unpaid"
+        | "paused";
       user_status:
         | "active"
         | "inactive"

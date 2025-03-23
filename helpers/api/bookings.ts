@@ -1,5 +1,5 @@
 import { supabase } from "@/helpers/supabase";
-import { BookingFormData } from "@/types/bookings";
+import { BookingFormData } from "@/schemas/bookings";
 import moment from "moment";
 
 async function getBooking(id: string) {

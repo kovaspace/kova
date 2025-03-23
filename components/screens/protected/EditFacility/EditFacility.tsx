@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { editFacility, getFacilities, getFacility } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
-import { facilitiesSchema, FacilityFormData } from "@/types/facilities";
+import { facilitiesSchema, FacilityFormData } from "@/schemas/facilities";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { CloudUpload, Paperclip } from "lucide-react";

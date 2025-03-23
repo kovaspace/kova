@@ -1,5 +1,5 @@
 import { supabase } from "@/helpers/supabase";
-import { FacilityFormData } from "@/types/facilities";
+import { FacilityFormData } from "@/schemas/facilities";
 
 async function getFacility(id: string) {
   try {

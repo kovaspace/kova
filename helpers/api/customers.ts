@@ -1,5 +1,5 @@
 import { supabase } from "@/helpers/supabase";
-import { CustomerFormData } from "@/types/customers";
+import { CustomerFormData } from "@/schemas/customers";
 
 async function getCustomer(id: string) {
   try {
