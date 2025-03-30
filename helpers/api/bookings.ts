@@ -7,7 +7,7 @@ async function getBooking(id: string) {
     const { data, error } = await supabase
       .from("bookings")
       .select()
-      .eq("id", id)
+      .eq("id", Number(id))
       .single();
 
     if (error) throw error;
