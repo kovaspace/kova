@@ -27,7 +27,7 @@ const priceFeatures: Record<string, string[]> = {
   ],
 };
 
-export async function getSubscriptionPlans() {
+export async function getSubscriptionPlans(currentPriceId?: string | null) {
   const prices = await stripe.prices.list({
     active: true,
     expand: ["data.product"],
@@ -35,8 +35,6 @@ export async function getSubscriptionPlans() {
 
   return prices.data.map((price) => {
     const product = price.product as Stripe.Product;
-
-    console.log(price);
 
     return {
       id: price.id,
@@ -48,7 +46,7 @@ export async function getSubscriptionPlans() {
         currency: price.currency,
       }).format(price.unit_amount! / 100),
       features: priceFeatures[price.id] || [],
-      current: false,
+      current: price.id === currentPriceId,
     };
   });
 }

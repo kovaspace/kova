@@ -4,11 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getSubscriptionPlans } from "@/config/subscriptions";
+import { getAccountSubscription } from "@/helpers/api";
 import { createCheckoutSession } from "@/helpers/stripe/checkout";
 import { useToast } from "@/hooks/useToast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Check, CreditCard } from "lucide-react";
 import { useRouter } from "next/navigation";
+import moment from "moment";
 
 interface BillingProps {
   accountId: string;
@@ -31,9 +33,16 @@ export default function Billing({ accountId }: BillingProps) {
     },
   });
 
+  const { data: currentSubscription } = useQuery({
+    queryKey: ["currentSubscription"],
+    queryFn: () => getAccountSubscription(accountId),
+    enabled: !!accountId,
+  });
+
   const { data: subscriptionPlans, isLoading } = useQuery({
     queryKey: ["subscriptionPlans"],
-    queryFn: getSubscriptionPlans,
+    queryFn: () => getSubscriptionPlans(currentSubscription?.stripe_price_id),
+    enabled: !!currentSubscription,
   });
 
   if (isLoading) {
@@ -43,6 +52,8 @@ export default function Billing({ accountId }: BillingProps) {
   if (!subscriptionPlans) {
     return <div>No subscription plans found</div>;
   }
+
+  const currentPlan = subscriptionPlans.find((plan) => plan.current);
 
   return (
     <div className="space-y-8">
@@ -69,12 +80,29 @@ export default function Billing({ accountId }: BillingProps) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-medium">Free Plan</h3>
-                <Badge variant="outline">Current Plan</Badge>
+                <h3 className="font-medium">
+                  {currentPlan?.name || "Free Plan"}
+                </h3>
+                <Badge
+                  variant={
+                    currentSubscription?.status === "active"
+                      ? "default"
+                      : "outline"
+                  }
+                >
+                  {currentSubscription?.status === "active"
+                    ? "Active"
+                    : "Free Plan"}
+                </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Basic features for small teams
-              </p>
+              {currentSubscription?.current_period_end && (
+                <p className="text-sm text-muted-foreground mt-1">
+                  Next billing date:{" "}
+                  {moment
+                    .unix(parseInt(currentSubscription.current_period_end))
+                    .format("LL")}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -122,7 +150,7 @@ export default function Billing({ accountId }: BillingProps) {
                     ? "Current Plan"
                     : isPending
                     ? "Loading..."
-                    : "Upgrade"}
+                    : "Change Plan"}
                 </Button>
               </div>
             </Card>

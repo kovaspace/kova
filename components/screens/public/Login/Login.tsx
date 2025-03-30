@@ -15,9 +15,11 @@ import { useMutation } from "@tanstack/react-query";
 import { signInWithPassword } from "@/helpers/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/useToast";
 
 export function Login() {
   const router = useRouter();
+  const { toast } = useToast();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -33,6 +35,13 @@ export function Login() {
     },
     onSuccess: () => {
       router.push("/dashboard");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: "Error",
+        description: "Invalid email or password",
+      });
     },
   });
 

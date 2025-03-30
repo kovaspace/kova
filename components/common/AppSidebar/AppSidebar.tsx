@@ -186,7 +186,7 @@ export default function AppSidebar({
   });
 
   const { data: currentAccount, isLoading: isAccountLoading } = useQuery({
-    queryKey: ["currentAccount"],
+    queryKey: ["account"],
     queryFn: () => getAccount(accountId),
   });
 
