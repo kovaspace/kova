@@ -220,7 +220,7 @@ export default function CreateSpace({ accountId }: CreateSpaceProps) {
               <FormControl>
                 <Textarea
                   placeholder="Description"
-                  className="resize-none"
+                  className="min-h-[120px] resize-y"
                   {...field}
                 />
               </FormControl>

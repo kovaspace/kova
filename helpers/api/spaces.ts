@@ -22,7 +22,8 @@ async function getSpaces(accountId: string) {
     const spacesWithFacilities = supabase
       .from("spaces")
       .select("*, facilities (name, account_id)")
-      .eq("facilities.account_id", accountId);
+      .eq("facilities.account_id", accountId)
+      .order("status", { ascending: true });
 
     const { data, error } = await spacesWithFacilities;
 

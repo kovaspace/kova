@@ -49,7 +49,7 @@ export default function Facilities({ accountId }: FacilitiesProps) {
               />
               <button
                 type="button"
-                onClick={() => router.push(`/facilities/edit/${facility.id}`)}
+                onClick={() => router.push(`/facilities/${facility.id}`)}
                 className="absolute inset-0 focus:outline-none"
               >
                 <span className="sr-only">

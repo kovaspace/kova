@@ -282,7 +282,7 @@ export default function CreateFacility({ accountId }: CreateFacilityProps) {
               <FormControl>
                 <Textarea
                   placeholder="Describe your facility"
-                  className="resize-none"
+                  className="min-h-[120px] resize-y"
                   {...field}
                 />
               </FormControl>
