@@ -1,13 +1,31 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { MoreHorizontal, Plus } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  MoreHorizontal,
+  Plus,
+  Search,
+} from "lucide-react";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -19,61 +37,55 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { useDialogContext } from "@/context/dialogContext";
-import { deletCustomer, getCustomers } from "@/helpers/api";
-import { formatDate } from "@/helpers/utils";
+import { deleteBooking, getBookings } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { formatAMPM, formatDate } from "@/helpers/utils";
 
-export default function Customers() {
-  const { setOpenDialog } = useDialogContext();
+export default function Bookings() {
   const { toast } = useToast();
-  const router = useRouter();
+  const { setOpenDialog } = useDialogContext();
 
   const {
-    data: customers,
-    refetch,
+    data: bookings,
     isLoading,
+    refetch,
   } = useQuery({
-    queryKey: ["customers"],
-    queryFn: getCustomers,
+    queryKey: ["bookings"],
+    queryFn: getBookings,
   });
 
-  const { mutate: deleteCustomer } = useMutation({
-    mutationFn: async (values: string) => await deletCustomer(values),
-    onSuccess: (data: {
-      first_name: string;
-      last_name: string;
-      email: string;
-    }) => {
+  const { mutate } = useMutation({
+    mutationFn: deleteBooking,
+    onSuccess: () => {
       toast({
         title: "Success",
-        description: `${data.first_name} ${data.last_name} has been deleted`,
+        description: "Booking deleted succesfully",
       });
       refetch();
     },
     onError: (error) => {
-      console.log(error);
       toast({
         title: "Error",
-        description: `Failed to delete customer`,
+        description: error.message,
       });
     },
   });
 
-  if (isLoading) return <>loading...</>; // Add loading state
-  if (!customers) return <>no customers</>; // Add empty state
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+  if (!bookings) {
+    return "No bookings found";
+  }
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Customers</h1>
-
-        <Button onClick={() => setOpenDialog("addCustomer")}>
+        <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
+        <Button onClick={() => setOpenDialog("addBooking")}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Customer
+          Add Booking
         </Button>
       </div>
 
@@ -81,7 +93,7 @@ export default function Customers() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Customers
+              Total Bookings
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -94,7 +106,7 @@ export default function Customers() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Active Customers
+              Active Bookings
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -106,7 +118,7 @@ export default function Customers() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">New Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">New Bookings</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">145</div>
@@ -118,7 +130,7 @@ export default function Customers() {
         <Card>
           <CardHeader className="dlex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Customer Retention
+              Booking Retention
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -134,28 +146,26 @@ export default function Customers() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>First Name</TableHead>
-              <TableHead>Last Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone Number</TableHead>
-              <TableHead>Created at</TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead>Facility</TableHead>
+              <TableHead>Space</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Start Time</TableHead>
+              <TableHead>End Time</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {customers?.map((customer) => (
-              <TableRow key={customer.id}>
+            {bookings.map((booking) => (
+              <TableRow key={booking.id}>
                 <TableCell>
-                  <div className="font-medium">{customer.first_name}</div>
+                  <div className="font-medium">{`${booking.customers?.first_name} ${booking.customers?.last_name}`}</div>
                 </TableCell>
-                <TableCell>
-                  <div className="font-medium">{customer.last_name}</div>
-                </TableCell>
-                <TableCell>{customer.email}</TableCell>
-                <TableCell>
-                  <div className="font-medium">{customer.phone_number}</div>
-                </TableCell>
-                <TableCell>{formatDate(customer.created_at)}</TableCell>
+                <TableCell>{booking.spaces?.facilities?.name}</TableCell>
+                <TableCell>{booking.spaces?.name}</TableCell>
+                <TableCell>{formatDate(booking.date)}</TableCell>
+                <TableCell>{formatAMPM(booking.start_time)}</TableCell>
+                <TableCell>{formatAMPM(booking.end_time)}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -165,23 +175,22 @@ export default function Customers() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
-                        onClick={() => router.push(`/customers/${customer.id}`)}
+                        onClick={() =>
+                          setOpenDialog("viewBooking", String(booking.id))
+                        }
                       >
                         View details
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => {
-                          setOpenDialog("editCustomer", customer.id);
-                        }}
+                        onClick={() =>
+                          setOpenDialog("editBooking", String(booking.id))
+                        }
                       >
-                        Edit customer
+                        Edit booking
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => deleteCustomer(customer.id)}
-                        className="text-destructive"
-                      >
-                        Delete customer
+                      <DropdownMenuItem onClick={() => mutate(booking.id)}>
+                        Delete booking
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

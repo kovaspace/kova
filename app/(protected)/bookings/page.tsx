@@ -1,6 +1,6 @@
 import AppContainer from "@/components/common/AppContainer";
 import Header from "@/components/common/Header";
-import Bookings from "@/components/screens/public/Bookings";
+import Bookings from "@/components/screens/protected/Bookings/Bookings";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

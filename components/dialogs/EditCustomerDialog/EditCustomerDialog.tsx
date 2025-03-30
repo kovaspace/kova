@@ -24,17 +24,18 @@ import { useToast } from "@/hooks/useToast";
 import { CustomerFormData, CustomerSchema } from "@/schemas/customers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface AddCustomerDialogProps {
   onClose: () => void;
+  customerId: string;
 }
 
 export default function EditCustomerDialog({
   onClose,
+  customerId,
 }: AddCustomerDialogProps) {
-  const [customerId, setCustomerId] = useState<string>("");
   const { toast } = useToast();
 
   const { data: customer, refetch: refetchCustomer } = useQuery({
@@ -64,7 +65,6 @@ export default function EditCustomerDialog({
       refetchCustomers();
       onClose();
       reset();
-      localStorage.removeItem("customerId");
     },
     onError: (error) => {
       console.log(error);
@@ -82,11 +82,6 @@ export default function EditCustomerDialog({
   });
 
   const { reset, handleSubmit, control } = form;
-
-  useEffect(() => {
-    const customerId = localStorage.getItem("customerId");
-    if (customerId) setCustomerId(customerId);
-  }, []);
 
   useEffect(() => {
     if (customer) {
@@ -108,7 +103,6 @@ export default function EditCustomerDialog({
       open={true}
       onOpenChange={(open) => {
         if (!open) onClose();
-        localStorage.removeItem("customerId");
       }}
     >
       <DialogContent className="sm:max-w-[425px]">

@@ -1,21 +1,33 @@
 "use client";
 import { createContext, ReactNode, useContext, useState } from "react";
 
-type DialogTypes = "addCustomer" | "addBooking" | "editCustomer" | null;
+type DialogTypes =
+  | "addCustomer"
+  | "addBooking"
+  | "editCustomer"
+  | "editBooking"
+  | "viewBooking"
+  | null;
 
 type DialogContextType = {
   openDialog: DialogTypes;
-  setOpenDialog: (dialog: DialogTypes) => void;
-  customerId?: string | null;
+  setOpenDialog: (dialog: DialogTypes, id?: string) => void;
+  id?: string | null;
 };
 
 const DialogContext = createContext<DialogContextType | undefined>(undefined);
 
 export const DialogProvider = ({ children }: { children: ReactNode }) => {
-  const [openDialog, setOpenDialog] = useState<DialogTypes>(null);
+  const [dialog, setDialog] = useState<DialogTypes>(null);
+  const [id, setId] = useState<string | null>(null);
+
+  const setOpenDialog = (dialog: DialogTypes, id: string | null = null) => {
+    setDialog(dialog);
+    setId(id);
+  };
 
   return (
-    <DialogContext.Provider value={{ openDialog, setOpenDialog }}>
+    <DialogContext.Provider value={{ openDialog: dialog, setOpenDialog, id }}>
       {children}
     </DialogContext.Provider>
   );

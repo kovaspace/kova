@@ -4,9 +4,10 @@ import { useDialogContext } from "@/context/dialogContext";
 import AddCustomerDialog from "../AddCustomerDialog/AddCustomerDialog";
 import EditCustomerDialog from "../EditCustomerDialog";
 import AddBookingDialog from "../AddBookingDialog";
+import ViewBookingDialog from "../ViewBookingDialog";
 
 const DialogWrapper = ({ accountId }: { accountId: string }) => {
-  const { openDialog, setOpenDialog } = useDialogContext();
+  const { openDialog, setOpenDialog, id } = useDialogContext();
 
   const closeDialog = () => setOpenDialog(null);
 
@@ -15,11 +16,25 @@ const DialogWrapper = ({ accountId }: { accountId: string }) => {
       {openDialog === "addCustomer" && (
         <AddCustomerDialog onClose={closeDialog} />
       )}
+      {openDialog === "editCustomer" && (
+        <EditCustomerDialog onClose={closeDialog} customerId={id as string} />
+      )}
       {openDialog === "addBooking" && (
         <AddBookingDialog onClose={closeDialog} accountId={accountId} />
       )}
-      {openDialog === "editCustomer" && (
-        <EditCustomerDialog onClose={closeDialog} />
+      {openDialog === "editBooking" && (
+        <ViewBookingDialog
+          onClose={closeDialog}
+          accountId={accountId}
+          bookingId={id as string}
+        />
+      )}
+      {openDialog === "viewBooking" && (
+        <ViewBookingDialog
+          onClose={closeDialog}
+          accountId={accountId}
+          bookingId={id as string}
+        />
       )}
     </>
   );

@@ -245,7 +245,7 @@ export default function EditSpace({ accountId }: EditSpaceProps) {
               <FormControl>
                 <Textarea
                   placeholder="Description"
-                  className="resize-none"
+                  className="min-h-[120px] resize-y"
                   {...field}
                 />
               </FormControl>
