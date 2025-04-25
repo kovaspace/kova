@@ -106,11 +106,12 @@ export default function Organization({ accountId }: OrganizationProps) {
 
                 <div className="flex items-center gap-6">
                   <div className="relative h-24 w-24">
-                    <div className="h-24 w-24 rounded-lg border bg-muted flex items-center justify-center">
+                    <div className="relative h-24 w-24 rounded-lg border bg-muted flex items-center justify-center">
                       <Image
                         src={account.logo || "/placeholder-logo.png"}
                         alt="Organization logo"
                         className="rounded-lg object-cover"
+                        sizes="(max-width: 96px) 100vw, 96px"
                         fill
                       />
                     </div>
