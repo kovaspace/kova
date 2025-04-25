@@ -32,6 +32,7 @@ import { getAccount, getCurrentUser } from "@/helpers/api";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+// import { LoadingSidebar } from "./LoadingSidebar";
 
 // This is sample data.
 const data = {
@@ -180,7 +181,7 @@ export default function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & { accountId: string }) {
   const router = useRouter();
 
-  const { data: currentUser, isLoading } = useQuery({
+  const { data: currentUser, isLoading: isUserLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: getCurrentUser,
   });
@@ -188,41 +189,11 @@ export default function AppSidebar({
   const { data: currentAccount, isLoading: isAccountLoading } = useQuery({
     queryKey: ["account"],
     queryFn: () => getAccount(accountId),
+    enabled: !!accountId,
   });
 
-  if (isLoading || !currentUser || isAccountLoading || !currentAccount) {
-    return (
-      <Sidebar collapsible="icon" {...props}>
-        <SidebarHeader>
-          <SidebarMenu>
-            <SidebarMenuButton size="lg">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-muted">
-                <Skeleton className="h-8 w-8 rounded-lg" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight gap-1">
-                <Skeleton className="h-4 w-32" />
-                <Skeleton className="h-[18px] w-16" />
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenu>
-        </SidebarHeader>
-
-        <SidebarContent>
-          <NavProjects projects={data.projects} />
-        </SidebarContent>
-
-        <SidebarFooter>
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-8 w-8 rounded-full" />
-            <div className="grid gap-1">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-3 w-20" />
-            </div>
-          </div>
-        </SidebarFooter>
-        <SidebarRail />
-      </Sidebar>
-    );
+  if (isUserLoading || isAccountLoading || !currentUser || !currentAccount) {
+    return <LoadingSidebar />;
   }
 
   const { first_name, last_name, accounts } = currentUser;
@@ -262,6 +233,62 @@ export default function AppSidebar({
             email: accounts?.email ?? "",
           }}
         />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  );
+}
+
+export function LoadingSidebar() {
+  return (
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuButton size="lg">
+            <div className="flex items-center gap-3 w-full">
+              <Skeleton className="h-10 w-10 rounded-lg" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-4 w-[60%]" />
+                <Skeleton className="h-3 w-[40%]" />
+              </div>
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenu>
+      </SidebarHeader>
+
+      <SidebarContent className="space-y-6">
+        {/* Navigation Items Loading State */}
+        <div className="space-y-2 px-2">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex items-center gap-3 p-2">
+              <Skeleton className="h-5 w-5" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          ))}
+        </div>
+
+        {/* Spaces Loading State */}
+        <div className="space-y-2">
+          <div className="px-4">
+            <Skeleton className="h-4 w-16" />
+          </div>
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex items-center gap-3 px-4 py-2">
+              <Skeleton className="h-6 w-6 rounded" />
+              <Skeleton className="h-4 w-28" />
+            </div>
+          ))}
+        </div>
+      </SidebarContent>
+
+      <SidebarFooter>
+        <div className="flex items-center gap-3 p-4">
+          <Skeleton className="h-9 w-9 rounded-full" />
+          <div className="space-y-1.5">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-3 w-20" />
+          </div>
+        </div>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

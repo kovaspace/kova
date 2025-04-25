@@ -54,15 +54,32 @@ async function getSpacesByFacilityId(facility_id: string) {
 
 async function createSpace(body: SpaceFormData) {
   try {
-    const { data, error } = await supabase
+    const { images, ...rest } = body;
+
+    const { data: space, error } = await supabase
       .from("spaces")
-      .insert(body)
+      .insert(rest)
       .select()
       .single();
 
     if (error) throw error;
 
-    return data;
+    console.log("space", space);
+
+    images?.forEach(async (image, index) => {
+      const { data, error } = await supabase.storage
+        .from("spaces")
+        .upload(`${space.id}/${index}`, image, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      console.log("image", data);
+
+      if (error) throw error;
+    });
+
+    return space;
   } catch (error) {
     throw error;
   }
@@ -85,18 +102,34 @@ async function deletSpace(id: string) {
   }
 }
 
-async function editSpace(id: string, body: SpaceFormData) {
+async function editSpace(id: string, accountId: string, body: SpaceFormData) {
   try {
-    const { data, error } = await supabase
+    const { images, ...rest } = body;
+
+    const uploads = images?.map(async (image, index) => {
+      const filePath = `${accountId}/spaces/${id}/${index}`;
+      const { error } = await supabase.storage
+        .from("app")
+        .upload(filePath, image, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+      if (error) throw error;
+      return filePath;
+    });
+
+    await Promise.all(uploads ?? []);
+
+    const { data: space, error } = await supabase
       .from("spaces")
-      .update(body)
+      .update(rest)
       .match({ id })
       .select()
       .single();
 
     if (error) throw error;
 
-    return data;
+    return space;
   } catch (error) {
     throw error;
   }

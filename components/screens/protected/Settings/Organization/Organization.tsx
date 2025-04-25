@@ -18,8 +18,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { useEffect } from "react";
+import { ExternalLink } from "lucide-react";
 
 interface OrganizationProps {
   accountId: string;
@@ -157,10 +159,40 @@ export default function Organization({ accountId }: OrganizationProps) {
                     name="slug"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Slug</FormLabel>
+                        <FormLabel>Booking URL</FormLabel>
                         <FormControl>
-                          <Input placeholder="organization-name" {...field} />
+                          <div className="flex">
+                            <div className="flex items-center px-3 rounded-l-md border border-r-0 bg-muted text-muted-foreground text-sm">
+                              book.kovaspace.com/
+                            </div>
+                            <Input
+                              className="rounded-l-none rounded-r-none border-r-0"
+                              placeholder="organization-name"
+                              {...field}
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="rounded-l-none px-3"
+                              onClick={() =>
+                                window.open(
+                                  `https://book.kovaspace.com/${field.value}`,
+                                  "_blank"
+                                )
+                              }
+                              disabled={!field.value}
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                              <span className="sr-only">
+                                Visit booking page
+                              </span>
+                            </Button>
+                          </div>
                         </FormControl>
+                        <FormDescription>
+                          This is your public booking URL where customers can
+                          make reservations
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

@@ -6,6 +6,7 @@ export const spaceSchema = z.object({
   description: z.string().min(1, "Description is required"),
   facility_id: z.string().min(1, "Facility is required"),
   status: z.enum(["active", "inactive", "archived"]),
+  images: z.array(z.instanceof(File)).optional(),
 });
 
 export type SpaceFormData = z.infer<typeof spaceSchema>;

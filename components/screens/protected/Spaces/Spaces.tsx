@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getSpaces } from "@/helpers/api";
 import { cn } from "@/helpers/utils";
+import { getHeroImage } from "@/helpers/utils/getHeroImage";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import Image from "next/image";
@@ -62,7 +63,7 @@ export default function Spaces({ accountId }: SpacesProps) {
               <div className="relative aspect-[16/10]">
                 <Image
                   alt={space.name}
-                  src="https://images.unsplash.com/photo-1731490862684-50c9a4180953?q=80&w=2670&auto=format&fit=crop"
+                  src={getHeroImage(accountId, space.id)}
                   fill
                   className="object-cover"
                 />

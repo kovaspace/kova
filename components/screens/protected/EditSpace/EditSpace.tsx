@@ -2,6 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  FileInput,
+  FileUploader,
+  FileUploaderContent,
+  FileUploaderItem,
+} from "@/components/ui/file-upload";
+import { CloudUpload, Paperclip } from "lucide-react";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -27,7 +34,7 @@ import { SpaceFormData, spaceSchema } from "@/schemas/spaces";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface EditSpaceProps {
@@ -35,7 +42,7 @@ interface EditSpaceProps {
 }
 
 export default function EditSpace({ accountId }: EditSpaceProps) {
-  // const [files, setFiles] = useState<File[] | null>(null);
+  const [files, setFiles] = useState<File[] | null>([]);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -43,11 +50,11 @@ export default function EditSpace({ accountId }: EditSpaceProps) {
 
   const spaceId = pathname.split("/").pop();
 
-  // const dropZoneConfig = {
-  //   maxFiles: 5,
-  //   maxSize: 1024 * 1024 * 4,
-  //   multiple: true,
-  // };
+  const dropZoneConfig = {
+    maxFiles: 5,
+    maxSize: 1024 * 1024 * 4,
+    multiple: true,
+  };
 
   const { data: facilities, isLoading } = useQuery({
     queryKey: ["facilities"],
@@ -73,6 +80,7 @@ export default function EditSpace({ accountId }: EditSpaceProps) {
       description: "",
       facility_id: undefined,
       status: "inactive",
+      images: undefined,
     },
   });
 
@@ -80,7 +88,7 @@ export default function EditSpace({ accountId }: EditSpaceProps) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (values: SpaceFormData) =>
-      await editSpace(spaceId as string, values),
+      await editSpace(spaceId as string, accountId, values),
     onSuccess: () => {
       toast({
         title: "Success",
@@ -99,7 +107,11 @@ export default function EditSpace({ accountId }: EditSpaceProps) {
   });
 
   const onSubmit = (values: SpaceFormData) => {
-    mutate(values);
+    console.log(files);
+    mutate({
+      ...values,
+      images: files || undefined,
+    });
   };
 
   useEffect(() => {
@@ -189,7 +201,7 @@ export default function EditSpace({ accountId }: EditSpaceProps) {
           )}
         />
 
-        {/* <FormField
+        <FormField
           control={control}
           name="images"
           render={({ field }) => (
@@ -198,8 +210,11 @@ export default function EditSpace({ accountId }: EditSpaceProps) {
               <FormControl>
                 <FileUploader
                   {...field}
-                  value={files}
-                  onValueChange={setFiles}
+                  value={Array.isArray(files) ? files : []}
+                  onValueChange={(newFiles) => {
+                    setFiles(newFiles);
+                    field.onChange(newFiles);
+                  }}
                   dropzoneOptions={dropZoneConfig}
                   className="relative bg-background rounded-lg p-2"
                 >
@@ -234,7 +249,7 @@ export default function EditSpace({ accountId }: EditSpaceProps) {
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        />
 
         <FormField
           control={control}

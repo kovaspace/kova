@@ -2,6 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  FileInput,
+  FileUploader,
+  FileUploaderContent,
+  FileUploaderItem,
+} from "@/components/ui/file-upload";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -20,13 +26,14 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { getFacilities } from "@/helpers/api";
-import { createSpace, getSpaces } from "@/helpers/api";
+import { createSpace, getFacilities, getSpaces } from "@/helpers/api";
 import { useToast } from "@/hooks/useToast";
 import { SpaceFormData, spaceSchema } from "@/schemas/spaces";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { CloudUpload, Paperclip } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface CreateSpaceProps {
@@ -34,16 +41,16 @@ interface CreateSpaceProps {
 }
 
 export default function CreateSpace({ accountId }: CreateSpaceProps) {
-  // const [files, setFiles] = useState<File[] | null>(null);
+  const [files, setFiles] = useState<File[] | null>(null);
 
   const router = useRouter();
   const { toast } = useToast();
 
-  // const dropZoneConfig = {
-  //   maxFiles: 5,
-  //   maxSize: 1024 * 1024 * 4,
-  //   multiple: true,
-  // };
+  const dropZoneConfig = {
+    maxFiles: 5,
+    maxSize: 1024 * 1024 * 4,
+    multiple: true,
+  };
 
   const { data: facilities, isLoading } = useQuery({
     queryKey: ["facilities"],
@@ -63,6 +70,7 @@ export default function CreateSpace({ accountId }: CreateSpaceProps) {
       description: "",
       facility_id: undefined,
       status: "inactive",
+      images: [],
     },
   });
 
@@ -87,6 +95,7 @@ export default function CreateSpace({ accountId }: CreateSpaceProps) {
   });
 
   const onSubmit = (values: SpaceFormData) => {
+    console.log("values", values);
     mutate(values);
   };
 
@@ -164,7 +173,7 @@ export default function CreateSpace({ accountId }: CreateSpaceProps) {
           )}
         />
 
-        {/* <FormField
+        <FormField
           control={control}
           name="images"
           render={({ field }) => (
@@ -209,7 +218,7 @@ export default function CreateSpace({ accountId }: CreateSpaceProps) {
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        />
 
         <FormField
           control={control}
